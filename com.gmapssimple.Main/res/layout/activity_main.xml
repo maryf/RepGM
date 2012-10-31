@@ -1,0 +1,48 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"         >
+
+   <com.google.android.maps.MapView
+                 android:id="@+id/mapView" 
+                 android:layout_width="fill_parent"
+                 android:layout_height="fill_parent"
+                 android:enabled="true"
+                 android:clickable="true"
+                 android:apiKey="038jop_1dkmSbOKqVXgBvuAu82eNZT4-qBqytrA" />
+                               
+   
+   
+       <LinearLayout android:id="@+id/zoom" 
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content" 
+        android:layout_alignParentBottom="true" 
+        android:layout_centerHorizontal="true" 
+        />
+
+            <!-- <Button
+                 android:id="@+id/insertPOI"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentBottom="true"
+                 android:layout_alignParentLeft="true"
+                 android:text="Insert POI" />-->
+              
+              <Button
+                 android:id="@+id/signIn"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentBottom="true"
+                 android:layout_alignParentRight="true"
+                 android:text="Sign in" />
+
+              <Button
+                  android:id="@+id/UpImage"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_above="@+id/zoom"
+                  android:layout_alignParentLeft="true"
+                  android:text="Upload Image" />
+
+</RelativeLayout>
