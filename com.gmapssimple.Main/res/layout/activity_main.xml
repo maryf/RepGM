@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"         >
 
-   <com.google.android.maps.MapView
+    <com.google.android.maps.MapView
                  android:id="@+id/mapView" 
                  android:layout_width="fill_parent"
                  android:layout_height="fill_parent"
@@ -21,28 +21,42 @@
         android:layout_centerHorizontal="true" 
         />
 
-            <!-- <Button
-                 android:id="@+id/insertPOI"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:layout_alignParentBottom="true"
-                 android:layout_alignParentLeft="true"
-                 android:text="Insert POI" />-->
-              
-              <Button
-                 android:id="@+id/signIn"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:layout_alignParentBottom="true"
-                 android:layout_alignParentRight="true"
-                 android:text="Sign in" />
+        
+       <TextView
+        android:id="@+id/textVie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="" />
+        
+        
+        <TextView
+              android:id="@+id/txtLocation"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_alignParentLeft="true"
+              android:layout_below="@+id/getLocation"
+              android:layout_marginTop="27dp"
+              android:text=""
+              android:textColor="#00FF00"
+              android:textStyle="bold" />
 
               <Button
                   android:id="@+id/UpImage"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
-                  android:layout_above="@+id/zoom"
+                  android:layout_above="@+id/txtLocation"
                   android:layout_alignParentLeft="true"
+                  android:layout_toLeftOf="@+id/getLocation"
                   android:text="Upload Image" />
 
+              <Button
+                  android:id="@+id/getLocation"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_alignParentRight="true"
+                  android:layout_alignParentTop="true"
+                  android:layout_marginTop="15dp"
+                  android:layout_toRightOf="@+id/zoom"
+                  android:text="Get your current location!" />
+              
 </RelativeLayout>

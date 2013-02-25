@@ -3,14 +3,19 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="7"></uses-sdk>
+    <uses-sdk android:minSdkVersion="8"
+        android:targetSdkVersion="17"></uses-sdk>
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
 
 
     <application
+         android:debuggable="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:label="@string/app_name">
          <uses-library android:required="true" android:name="com.google.android.maps"></uses-library>
         <activity
             android:name=".Main"
@@ -23,12 +28,42 @@
         </activity>
         
       
+         <activity
+            android:name=".ShowMap"
+            android:label="@string/title_activity_main" >
+            <intent-filter>
+                <action android:name="com.gmapssimple.SHOWMAP" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         
          <activity
             android:name=".SignIn"
             android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="com.gmapssimple.SIGNIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+         <activity
+            android:name=".Main2"
+            android:label="@string/title_activity_main" >
+            <intent-filter>
+                <action android:name="com.gmapssimple.MAIN2" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+         
+         <activity
+            android:name=".Register"
+            android:label="@string/title_activity_main" >
+            <intent-filter>
+                <action android:name="com.gmapssimple.REGISTER" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -43,6 +78,83 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        
+          <activity
+            android:name=".OpenMap"
+            android:label="@string/title_activity_main" >
+            <intent-filter>
+                <action android:name="com.gmapssimple.OPENMAP" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+           <activity
+            android:name=".GoogleMapsAppActivity"
+            android:label="@string/title_activity_main" >
+            <intent-filter>
+                <action android:name="com.gmapssimple.GOOGLEMAPSAPPACTIVITY" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+           
+
+         <activity
+            android:name=".PinpointView"
+            android:label="@string/title_activity_main" >
+            <intent-filter>
+                <action android:name="com.gmapssimple.PINPOINTVIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+          <activity
+            android:name=".AboutAB"
+            android:label="@string/title_activity_main" >
+            <intent-filter>
+                <action android:name="com.gmapssimple.ABOUTAB" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+           <activity
+            android:name=".CreatePin"
+            android:label="@string/title_activity_main" >
+            <intent-filter>
+                <action android:name="com.gmapssimple.CREATEPIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+           
+           
+            <activity
+            android:name=".PinpointDetails"
+            android:label="@string/title_activity_main" >
+            <intent-filter>
+                <action android:name="com.gmapssimple.PINPOINTDETAILS" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+            
+            <activity
+            android:name=".PinDet2"
+            android:label="@string/title_activity_main" >
+            <intent-filter>
+                <action android:name="com.gmapssimple.PINDET2" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+        
         
     </application>
 

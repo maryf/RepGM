@@ -5,170 +5,185 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
-public class SignIn extends Activity implements OnClickListener{
-    EditText etUser, etPass;
-    Button bLogin;
-    
-    //Create string variables that will have the input assigned to them
-    String username, password;
-    
-    //Create a HTTPClient as the form container
-    HttpClient httpclient;
-    
-    //Use HTTP POST method
-    HttpPost httppost;
-    
-    //Create an array list for the input data to be sent
-    ArrayList<NameValuePair> nameValuePairs;
-    
-    //Create a HTTP Response and HTTP Entity
-    HttpResponse response;
-    HttpEntity entity;
-    
-
+public class SignIn extends Activity {
+	EditText etUser, etPass;
+	Button bLogin;
+	String username1, password1,is1;
+	HttpPost httppost;
+	ArrayList<NameValuePair> nameValuePairs;
+	HttpResponse response;
+	HttpEntity entity;
 	
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.signin);
-        
-        initialise();
-    }
+	SharedPreferences pref;
+	String retUser;
+	String retPass;
+	TextView t1;
+	SessionManager session;
+	
+	private Object GetURL;
 
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.signin);
+
+		session = new SessionManager(getApplicationContext());
+
+		t1 = (TextView) findViewById(R.id.textView1);
+
+		initialise();
+		
+		
+
+		bLogin = (Button) findViewById(R.id.bSubmit);
+
+		bLogin.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View arg0) {
+				username1 = etUser.getText().toString();
+				password1 = etPass.getText().toString();
+				getURL("http://10.0.2.2/login/index.php");  
+				}
+		});
+		
+	}
+	
+	 public void getURL(String url) {  
+        new GetURL().execute(url);  
+    }  
+	/**session.getUserDetails();**/
 	private void initialise() {
 		// TODO Auto-generated method stub
 		etUser = (EditText) findViewById(R.id.etUser);
 		etPass = (EditText) findViewById(R.id.etPass);
-		bLogin = (Button) findViewById(R.id.bSubmit);
-		bLogin.setOnClickListener(this);
-	}
+		Button bregister = (Button) findViewById(R.id.reg);
+		bregister.setOnClickListener(new View.OnClickListener() {
 
-	public void onClick(View v) {
-				
-		//Dimiourgia HTTPClient
-		httpclient = new DefaultHttpClient();
-		
-		//Dimiourgia HTTP POST me parameter ti dieythinsi tou php arxeiou
-		httppost = new HttpPost("http://10.0.2.2/login/index.php");
-		
-		username = etUser.getText().toString();
-		password = etPass.getText().toString();
-		
-		
-		try {
-			
-			nameValuePairs = new ArrayList<NameValuePair>();
-			
-			//prosthiki username k pass se arraylist
-			nameValuePairs.add(new BasicNameValuePair("username", username));
-			nameValuePairs.add(new BasicNameValuePair("password", password));
-			
-			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			
-			response = httpclient.execute(httppost);
-			
-			//an status code 200 ok i sundesi
-			if(response.getStatusLine().getStatusCode()== 200){
-				
-			    entity = response.getEntity();
-				
-				if(entity != null){
-					
-					
-					//Create new input stream with received data assigned
-					InputStream instream = entity.getContent();
-					
-					//Create new JSON Object. assign converted data as parameter.
-					JSONObject jsonResponse = new JSONObject(convertStreamToString(instream));
-					
-					//assign json responses to local strings
-					String retUser = jsonResponse.getString("user");//mySQL table field
-					String retPass = jsonResponse.getString("pass");
-					
-					//Validate login
-					if(username.equals(retUser)&& password.equals(retPass)){
-						
-						//Create a new shared preference by getting the preference
-						//Give the shared preference any name you like.
-						SharedPreferences sp = getSharedPreferences("logindetails", 0);
-						
-						//Edit the Shared Preference
-						SharedPreferences.Editor spedit = sp.edit();
-						
-						//Put the login details as strings
-						spedit.putString("user", username);
-						spedit.putString("pass", password);
-						
-						//Close the editor
-						spedit.commit();
-					
-						Toast.makeText(getBaseContext(), "SUCCESS!", Toast.LENGTH_SHORT).show();
-						
-						
-					} else {
-						
-						Toast.makeText(getBaseContext(), "Invalid Login Details", Toast.LENGTH_SHORT).show();
-					}
-					
-				}
-				
-				
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				startActivity(new Intent("com.gmapssimple.REGISTER"));
+				finish();
+
 			}
-			
-			
-		} catch(Exception e){
-			e.printStackTrace();
-			System.out.println("ERROR : " + e.getMessage());
-			Toast.makeText(getBaseContext(), "Login Unsuccessful.", Toast.LENGTH_SHORT).show();
-		}
-
-		
-		
-	}	
+		});
+	}
 	
-	//metatropi InputStream se String
-	//mexri o BufferedReader na epistrepsei null, dld mexri to telos tou arxeiou
-	//kathe grammi prostithetai se ena StringBuilder kai epistrefetai se String
-	private static String convertStreamToString(InputStream is) {
-       
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
- 
-        String line = null;
-        try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
+	private class GetURL extends AsyncTask<String, Void, Void> {  
+        private final HttpClient Client = new DefaultHttpClient();  
+        private String Content;  
+        private String Error = null;  
+        
+          
+        protected void onPreExecute() {  
+             
+        }  
+  
+        protected Void doInBackground(String... urls) {  
+            try {  
+               httppost = new HttpPost(urls[0]);  
+                
+				//t1.setText("ok1");
+
+					nameValuePairs = new ArrayList<NameValuePair>();
+
+					nameValuePairs.add(new BasicNameValuePair("username",
+							username1));
+					nameValuePairs
+							.add(new BasicNameValuePair("pass", password1));
+
+					httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+					response = Client.execute(httppost);
+					if (response.getStatusLine().getStatusCode() == 200) {
+						//t1.setText("ok2");
+						entity = response.getEntity();
+						 is1 = EntityUtils.toString(entity);
+						if (entity != null) {
+							
+							JSONObject jsonResponse = new JSONObject(is1);
+							retUser = jsonResponse.getString("username");
+							retPass = jsonResponse.getString("pass");
+							//t1.setText(retUser);
+							
+							if (username1.equals(retUser)
+									&& password1.equals(retPass)) {
+								
+								//t1.setText("prin_session");
+								session.createLoginSession(retUser, retPass);
+								startActivity(new Intent("com.gmapssimple.OPENMAP"));
+								finish();
+
+								//Toast.makeText(getApplicationContext(), "SUCCESS!",Toast.LENGTH_SHORT).show();
+									Error="1";
+							} else {
+
+								//Toast.makeText(getBaseContext(),"Invalid Login Details",Toast.LENGTH_SHORT).show();
+							}
+
+						}
+
+					}
+
+				
+				
+				//ResponseHandler<String> responseHandler = new BasicResponseHandler();  
+                //Content = Client.execute(httpget, responseHandler);  
+            } catch (ClientProtocolException e) {  
+                Error = e.getMessage();  
+                cancel(true);  
+            } catch (IOException e) {  
+                Error = e.getMessage();  
+                cancel(true);  
+            } catch (Exception e) {
+				e.printStackTrace();
+			}
+
+              
+            return null;  
+        
+          }
+        protected void onPostExecute(Void unused) {  
+        	
+        	
+			
+
+           
+            if (Error =="1" ) { 
+            	Toast.makeText(getApplicationContext(), "SUCCESS!",Toast.LENGTH_SHORT).show();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return sb.toString();
-    }
+        
+        }  
+    }   
+    
+
+
 	
 }

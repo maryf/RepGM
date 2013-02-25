@@ -7,8 +7,8 @@
         android:id="@+id/tv"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text=""
-        android:textColor="#00FF00"
+        android:text="Step 1, pick the picture from your gallery"
+        android:textColor="#00FFF0"
         android:textStyle="bold" />
 
    <!--   <Button
@@ -27,15 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/bUpload"
-        android:src="@drawable/ic_launcher" />
-
-    <TextView
-        android:id="@+id/tv2"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="hello"
-        android:textColor="#00FF00"
-        android:textStyle="bold" />-->
+        android:src="@drawable/ic_launcher" /> -->
 
     <Button
         android:id="@+id/bUpload2"
@@ -45,5 +37,25 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="27dp"
         android:text="Open Gallery" />
+
+    <TextView
+        android:id="@+id/tv2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/bUpload2"
+        android:layout_marginTop="19dp"
+        android:text=""
+        android:textColor="#00FF00"
+        android:textStyle="bold" />
+
+    <!--  <Button
+        android:id="@+id/bOpenMap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="91dp"
+        android:text="Open the Map View" /> -->
 
 </RelativeLayout>

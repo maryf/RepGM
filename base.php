@@ -1,27 +1,27 @@
 <?php
 
-$base=$_REQUEST['image'];
+$usname=$_REQUEST['username'];
+$bit=$_REQUEST['bitmap'];
 
-echo $base;
 
-// base64 encoded utf-8 string
 
-$binary=base64_decode($base);
+$con = mysql_connect("localhost","root","");
+mysql_select_db("mobiledb1", $con);
 
-// binary, utf-8 bytes
+$result2 =mysql_query("SELECT image_id FROM pic WHERE pic.username='$usname' AND pic.bitmap='$bit'");
+$query2=mysql_fetch_array($result2);
+if ($query2==""){
+   $query=mysql_query("insert into pic (username,bitmap) values ('".$usname."','".$bit."')");
 
-header('Content-Type: bitmap; charset=utf-8');
 
-// print($binary);
+	$result =mysql_query("SELECT image_id FROM pic WHERE pic.username='$usname' AND pic.bitmap='$bit'");
+	$query1=mysql_fetch_array($result);
 
-//$theFile = base64_decode($image_data);
+	echo ($query1['image_id']);
+}
+else{
 
-$file = fopen('test.jpg', 'wb');
-
-fwrite($file, $binary);
-
-fclose($file);
-
-echo '<img src=test.jpg>';
+echo "exists";}
+	
 
 ?>

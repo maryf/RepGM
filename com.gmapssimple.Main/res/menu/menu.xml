@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/rate1"
+              android:title="1" />
+        <item android:id="@+id/rate2"
+              android:title="2" />
+        <item android:id="@+id/rate3"
+              android:title="3" />
+        <item android:id="@+id/rate4"
+              android:title="4" />
+        <item android:id="@+id/rate5"
+              android:title="5" />
+        <item android:id="@+id/rate6"
+              android:title="6" />
+        <item android:id="@+id/rate7"
+              android:title="7" />
+        <item android:id="@+id/rate8"
+              android:title="8" />
+        <item android:id="@+id/rate9"
+              android:title="9" />
+        <item android:id="@+id/rate10"
+              android:title="10" />
+    </group>
+</menu>
