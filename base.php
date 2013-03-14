@@ -1,12 +1,13 @@
 <?php
 
+include 'config.php';
+
 $usname=$_REQUEST['username'];
 $bit=$_REQUEST['bitmap'];
 
-
-
-$con = mysql_connect("localhost","root","");
-mysql_select_db("mobiledb1", $con);
+$conn = mysql_connect($dbhost, $dbuser, $dbpass) or die("connection error");
+         
+mysql_select_db($dbdb,$conn)or die("database selection error");
 
 $result2 =mysql_query("SELECT image_id FROM pic WHERE pic.username='$usname' AND pic.bitmap='$bit'");
 $query2=mysql_fetch_array($result2);
@@ -19,7 +20,7 @@ if ($query2==""){
 
 	echo ($query1['image_id']);
 }
-else{
+if ($query2!=""){
 
 echo "exists";}
 	

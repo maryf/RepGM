@@ -63,10 +63,12 @@ public class PinpointDetails extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				wikiLink = etWiki.getText().toString();
-				asyncTask7("http://10.0.2.2/login/insert_wikiLink.php");
+				if (wikiLink==""){ Toast.makeText(getApplicationContext(), "you have to enter a link",
+						Toast.LENGTH_LONG).show();}else{
+				asyncTask7(SignIn.add+"insert_wikiLink.php");
 				startActivity(new Intent(
 						"com.gmapssimple.OPENMAP"));
-				finish();
+				finish();}
 			}
 		});
 
@@ -191,6 +193,9 @@ public class PinpointDetails extends Activity {
 				httppost = new HttpPost(urls[0]);
 				//httppost = new HttpPost("http://192.168.1.60/login/geoP.php");
 				Log.i("era", tEra);
+				//if (wikiLink==null){ Toast.makeText(getApplicationContext(), "you have to enter a link",
+					//			Toast.LENGTH_LONG).show();}
+				
 				nameValuePairs = new ArrayList<NameValuePair>();
 				nameValuePairs.add(new BasicNameValuePair("wiki_link", wikiLink));
 				nameValuePairs.add(new BasicNameValuePair("image_id", value1));

@@ -1,11 +1,12 @@
 <?php
-//session_start();
 
+include 'config.php';
 $lat = $_REQUEST['latitude'];
  
 
-$con = mysql_connect("localhost","root","");
-mysql_select_db("mobiledb1", $con);
+ $conn = mysql_connect($dbhost, $dbuser, $dbpass) or die("connection error");
+         
+mysql_select_db($dbdb,$conn)or die("database selection error");
 
 
 $query = mysql_query("SELECT image_id FROM pic WHERE pic.latitude='$lat'");

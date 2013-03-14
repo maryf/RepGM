@@ -1,9 +1,7 @@
 <?php
 
-$dbhost = "localhost";
-$dbuser = "root";
-$dbpass = "";
-$dbdb = "mobiledb1";
+include 'config.php';
+
 $link=$_POST['wiki_link'];
 $imaid=$_POST['image_id'];
 $erap=$_POST['era'];

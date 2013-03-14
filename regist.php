@@ -1,11 +1,8 @@
 <?php
 error_reporting(~E_NOTICE);
-        
-session_start();
-$dbhost = "localhost";
-$dbuser = "root";
-$dbpass = "";
-$dbdb = "mobiledb1";
+
+include 'config.php';
+
 $username = $_POST['username'];       
 		
 $conn = mysql_connect($dbhost, $dbuser, $dbpass) or die("connection error");

@@ -49,7 +49,7 @@ public class SessionManager {
 	
 	public void latsession(String latitud) {
 		
-		editor.putBoolean(IS_LOGIN, true);
+		//editor.putBoolean(IS_LOGIN, true);
 
 		editor.putString(KEY_LAT, latitud);
 

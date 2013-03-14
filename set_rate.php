@@ -1,7 +1,11 @@
 <?php
 
-$con = mysql_connect("localhost","root","");
-mysql_select_db("mobiledb1", $con);
+include 'config.php';
+
+$conn = mysql_connect($dbhost, $dbuser, $dbpass) or die("connection error");
+         
+mysql_select_db($dbdb,$conn)or die("database selection error");
+
 
 $b_id = $_POST['image_id']; 
 $grade=$_POST['rating1'];

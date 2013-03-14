@@ -34,7 +34,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-//import android.util.Base64;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -52,7 +52,7 @@ public class UploadImage extends Activity {
 	// private ImageView imageView1;
 	InputStream is;
 	String imageFilePath,imageid1;
-	Button but, butt2, butt3;
+	Button but, butt2,  butt3;
 	TextView tv, tv2;
 	//HttpClient httpclient;
 	HttpPost httppost;
@@ -61,6 +61,10 @@ public class UploadImage extends Activity {
 	ArrayList<NameValuePair> nameValuePairs;
 	String ba1, name,value2;
 	SessionManager session;
+	
+	Bitmap bitmapOrg;
+	ByteArrayOutputStream bao;
+	byte [] ba ;
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -108,22 +112,40 @@ public class UploadImage extends Activity {
 			}
 		}
 
-		// metatropi eikonas se bitmap
+			
+		//try{
+		  	// decode in bitmap format the image that the user selects from his gallery
+			  	bitmapOrg= BitmapFactory.decodeFile(selectedImagePath);
+		     
+			  	bao = new ByteArrayOutputStream();
+			  	//compress the bitmap and put in in output stream bao, 80 specifies the quality parametre
+			  	bitmapOrg.compress(Bitmap.CompressFormat.JPEG, 70, bao);
+			  	ba = bao.toByteArray();
+			  	//converts byte array to string so it can be saved in the db
+			  	ba1=Base64.encodeToString(ba, Base64.DEFAULT);
+		  	//catch(Exception e){
+		  	//Log.v("getView", "Exception: " + e.toString());
+		  	//catch(OutOfMemoryError e){
+	         // bao=new  ByteArrayOutputStream();
+	          //bitmapOrg.compress(Bitmap.CompressFormat.JPEG,50, bao);
+	          //ba=bao.toByteArray();
+	          //ba1=Base64.encodeToString(ba, Base64.DEFAULT);
+	          //Log.e("EWN", "Out of memory error catched");
+	    //  }
 		
-	      Bitmap bitmapOrg= BitmapFactory.decodeFile(selectedImagePath);
-	      // tv2.setText("Environment.getExternalStorageDirectory().getPath() ") ;
-	 	  ByteArrayOutputStream bao = new ByteArrayOutputStream();
-	 	  bitmapOrg.compress(Bitmap.CompressFormat.JPEG, 90, bao);
-	 	  byte [] ba = bao.toByteArray();
-	 	   ba1=Base64.encodeBytes(ba);
+		
+		
+	 	  //ba1=Base64.encodeBytes(ba);	   
+	 			   //encodeBytes(ba);
 	 	 // tv.setText(ba1);
 		
 		
 		
-	 	 asyncTask5("http://10.0.2.2/login/base.php");   
+	 	 asyncTask5(SignIn.add+"base.php");   
 		
 
 	}
+	//asynchronous task for saving the image into the db
 	private class AsyncTask5 extends AsyncTask<String,Void,Void>{
 		private final HttpClient httpclient = new DefaultHttpClient();  
 		@Override
@@ -159,14 +181,16 @@ public class UploadImage extends Activity {
 		protected void onPostExecute(Void unused){
 
 			
-			//Toast.makeText(getApplicationContext(),imageid1,Toast.LENGTH_SHORT).show();
+			//checks if the user has already uploaded the specific image
 			if (imageid1.equals("exists")){
 				Toast.makeText(getApplicationContext(), 
 						"You have already uploaded this image,please select another one",
 						Toast.LENGTH_SHORT).show();
 				
 				
-			} else{
+			}
+			//if not the session of the image id is created
+			else{
 			
 			session.createImageIdSession(imageid1);
 			
@@ -178,7 +202,7 @@ public class UploadImage extends Activity {
 		
 	}
 	
-
+	//returns the string of the path on the sd card where the selected image is saved 
 	public String getPath(Uri uri) {
 		String[] projection = { MediaStore.Images.Media.DATA };
 

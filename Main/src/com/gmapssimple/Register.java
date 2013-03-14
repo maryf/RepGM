@@ -17,6 +17,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -72,7 +73,7 @@ public class Register extends Activity implements OnClickListener {
 		} else {
 			a = username.getText().toString().trim();
 			b = pass.getText().toString().trim();
-			asyncTask6("http://10.0.2.2/login/regist.php");  }
+			asyncTask6(SignIn.add+"regist.php");  }
 			finish();
 		    //}
 	//});
@@ -123,6 +124,8 @@ public class Register extends Activity implements OnClickListener {
         	
 	            if (Error !="1" ) { 
 	            	Toast.makeText(getApplicationContext(), "SUCCESS!",Toast.LENGTH_SHORT).show();
+	            	startActivity(new Intent("com.gmapssimple.SIGNIN"));
+					finish();
 	            }
 	           
 	        }  

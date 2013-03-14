@@ -21,6 +21,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.ByteArrayBuffer;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
@@ -104,7 +107,7 @@ public class PinpointView extends Activity {
 		Log.i("bitmapMary0", "[" + valuefs+ "]");
 
 		
-		maryAsyncTask("http://10.0.2.2/login/decode_bitmap.php");
+		maryAsyncTask(SignIn.add+"decode_bitmap.php");
 		
 	}
 	public void maryAsyncTask(String url) {  
@@ -126,45 +129,45 @@ public class PinpointView extends Activity {
 	    switch (item.getItemId()) {
 	        case R.id.rate1:
 	        	rate=(String) item.getTitle();
-	        	maryAsyncTask1("http://10.0.2.2/login/set_rate.php",rate);
+	        	maryAsyncTask1(SignIn.add+"set_rate.php",rate);
 	           	return true;
             case R.id.rate2:
             	rate=(String) item.getTitle();
-            	maryAsyncTask1("http://10.0.2.2/login/set_rate.php",rate);
+            	maryAsyncTask1(SignIn.add+"set_rate.php",rate);
 	            //if (item.isChecked()) item.setChecked(false);
 	            //else item.setChecked(true);
             	return true;
             case R.id.rate3:
 	        	rate=(String) item.getTitle();
-	        	maryAsyncTask1("http://10.0.2.2/login/set_rate.php",rate);
+	        	maryAsyncTask1(SignIn.add+"set_rate.php",rate);
 	        	return true;
             case R.id.rate4:
 	        	rate=(String) item.getTitle();
-	        	maryAsyncTask1("http://10.0.2.2/login/set_rate.php",rate);
+	        	maryAsyncTask1(SignIn.add+"set_rate.php",rate);
 	        	return true;
             case R.id.rate5:
 	        	rate=(String) item.getTitle();
-	        	maryAsyncTask1("http://10.0.2.2/login/set_rate.php",rate);
+	        	maryAsyncTask1(SignIn.add+"set_rate.php",rate);
 	        	return true;
             case R.id.rate6:
 	        	rate=(String) item.getTitle();
-	        	maryAsyncTask1("http://10.0.2.2/login/set_rate.php",rate);
+	        	maryAsyncTask1(SignIn.add+"set_rate.php",rate);
 	        	return true;
             case R.id.rate7:
 	        	rate=(String) item.getTitle();
-	        	maryAsyncTask1("http://10.0.2.2/login/set_rate.php",rate);
+	        	maryAsyncTask1(SignIn.add+"set_rate.php",rate);
 	        	return true;
             case R.id.rate8:
 	        	rate=(String) item.getTitle();
-	        	maryAsyncTask1("http://10.0.2.2/login/set_rate.php",rate);
+	        	maryAsyncTask1(SignIn.add+"set_rate.php",rate);
 	        	return true;
             case R.id.rate9:
 	        	rate=(String) item.getTitle();
-	        	maryAsyncTask1("http://10.0.2.2/login/set_rate.php",rate);
+	        	maryAsyncTask1(SignIn.add+"set_rate.php",rate);
 	        	return true;
             case R.id.rate10:
 	        	String rate=(String) item.getTitle();
-	        	maryAsyncTask1("http://10.0.2.2/login/set_rate.php",rate);
+	        	maryAsyncTask1(SignIn.add+"set_rate.php",rate);
 	        	
 	        	return true;
 	        default:
@@ -183,6 +186,9 @@ public class PinpointView extends Activity {
 		protected String doInBackground(String... urls) {
 			
 	   		try{
+	   			HttpParams httpParameters = new BasicHttpParams();
+	   			HttpConnectionParams.setConnectionTimeout(httpParameters, 5000);
+	   			HttpConnectionParams.setSoTimeout(httpParameters, 10000);
    				Log.i("OK1111", "ok");	   	   
 	   			httppost1 = new HttpPost(urls[0]);
 	   			
@@ -258,18 +264,24 @@ public class PinpointView extends Activity {
 		protected void onPostExecute(String bitm){
 
 			ImageView imageView = (ImageView) findViewById(R.id.imageView1);
+			try{
 			byte[] decodedString = Base64.decode(bitm, Base64.DEFAULT);
+			Log.i("SIZE", Integer.toString(decodedString.length));
 			bitmap4=BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 			 imageView.setImageBitmap(bitmap4);
-			 
+			}catch(OutOfMemoryError e){
+				 Log.e("EWN", "Out of memory error catched");
+	        
+			}
+			
 			 TextView tv1 = (TextView) findViewById(R.id.textType);
 			 TextView tv2 = (TextView) findViewById(R.id.textEra);
 			 TextView tv3 = (TextView) findViewById(R.id.textRatings);
 			 TextView tv4 = (TextView) findViewById(R.id.textLink);
-			 tv1.setText("Category:" +typ );
-			 tv2.setText("Era:" +erar );
-			 tv3.setText("Description/Link:" + link );
-			 tv4.setText("Ratings:" +frat );
+			 tv1.setText("Category : " +typ );
+			 tv2.setText("Era : " +erar );
+			 tv3.setText("Description/Link : " + link );
+			 tv4.setText("Ratings : " +frat );
 			 Linkify.addLinks(tv3, Linkify.ALL);
 			
 		}
@@ -326,38 +338,6 @@ public class PinpointView extends Activity {
 	
 	
 
-	private static byte[] convertStreamToString(InputStream is) {
-		
-		
-		
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		byte[] tmp = new byte[4096];
-		int ret = 0;
-
-		try {
-			while((ret = is.read(tmp,0,tmp.length)) > 0)
-			{
-			    bos.write(tmp, 0, ret);
-			   
-			}
-		
-			  
-			    int pos = 0;
-			    do {
-			       pos += is.read(tmp, pos, tmp.length-pos);
-			    } while (pos < tmp.length);
-			
-			
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		byte[] myArray = bos.toByteArray();
-		
-
 	
-	return myArray;
-}
 
 }

@@ -32,8 +32,9 @@
         android:id="@+id/textEra"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_below="@+id/textType"
-        
         android:text="" />
 
     <TextView
@@ -47,9 +48,19 @@
         android:id="@+id/textRatings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/textLink"
+        android:layout_alignParentLeft="true"
         android:layout_below="@+id/textLink"
-        
+       
         android:text="" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/textRatings"
+       
+        android:src="@drawable/star_holo_light" />
+
+    "
 
 </RelativeLayout>

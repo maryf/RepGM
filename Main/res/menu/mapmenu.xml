@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Single menu item
+         Set id, icon and Title for each menu item
+    -->
+    <item android:id="@+id/upload"
+          android:title="Upload image"
+          android:showAsAction="ifRoom" />
+ 
+    <item android:id="@+id/mytrek"
+          android:title="MyTrek"
+          android:showAsAction="ifRoom" />
+ 
+    <item android:id="@+id/menu_search"
+          android:title="My uploads"
+          android:showAsAction="ifRoom" />
+ 
+    <item android:id="@+id/logout"
+          android:title="Log out" 
+          android:showAsAction="ifRoom"/>
+ 
+  <!--   <item android:id="@+id/menu_delete"
+          android:icon="@drawable/markerblue"
+          android:title="Delete" />  
+ 
+    <item android:id="@+id/menu_preferences"
+          android:icon="@drawable/markerblue"
+          android:title="Preferences" />--> 
+</menu>

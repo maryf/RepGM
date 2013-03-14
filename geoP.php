@@ -1,12 +1,8 @@
 <?php
 error_reporting(~E_NOTICE);
        
-		
+include 'config.php';		
 
-$dbhost = "localhost";
-$dbuser = "root";
-$dbpass = "";
-$dbdb = "mobiledb1";
 $latitude = $_POST['lat'];     
 $longitude = $_POST['long']; 
 $username= $_POST['username']; 

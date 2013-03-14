@@ -3,20 +3,24 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="8"
+    <uses-sdk android:minSdkVersion="7"
         android:targetSdkVersion="17"></uses-sdk>
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"></uses-permission>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"/>
 
 
     <application
-         android:debuggable="true"
+        android:debuggable="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name">
-         <uses-library android:required="true" android:name="com.google.android.maps"></uses-library>
+        <uses-library android:required="true" android:name="com.google.android.maps"></uses-library>
         <activity
             android:name=".Main"
             android:label="@string/title_activity_main" >
@@ -48,15 +52,7 @@
             </intent-filter>
         </activity>
         
-         <activity
-            android:name=".Main2"
-            android:label="@string/title_activity_main" >
-            <intent-filter>
-                <action android:name="com.gmapssimple.MAIN2" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+        
         
          
          <activity
@@ -84,16 +80,6 @@
             android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="com.gmapssimple.OPENMAP" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        
-           <activity
-            android:name=".GoogleMapsAppActivity"
-            android:label="@string/title_activity_main" >
-            <intent-filter>
-                <action android:name="com.gmapssimple.GOOGLEMAPSAPPACTIVITY" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -144,11 +130,27 @@
         </activity>
         
             
-            <activity
-            android:name=".PinDet2"
+            
+        
+            
+            
+        
+             <activity
+            android:name=".MyTrek"
             android:label="@string/title_activity_main" >
             <intent-filter>
-                <action android:name="com.gmapssimple.PINDET2" />
+                <action android:name="com.gmapssimple.MYTREK" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+             
+              <activity
+            android:name=".Direction"
+            android:label="@string/title_activity_main" >
+            <intent-filter>
+                <action android:name="com.gmapssimple.DIRECTION" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

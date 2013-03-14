@@ -113,20 +113,24 @@ class Touchy extends Overlay {
 			if (e.getAction() == MotionEvent.ACTION_UP) {
 				stop = e.getEventTime();
 			}
-
+			//when the user taps the screen more than 2.5 seconds
 			if (stop - start > 1500) {
 				// TODO Auto-generated method stub
 				HashMap<String, String> user = session.getUserDetails();
+				//the session of the user's name is created
 				value = user.get(SessionManager.KEY_NAME);
+				
+				//the session of the image id is created
 				HashMap<String, String> image = session.getImageId();
 				value1 = image.get(SessionManager.KEY_IMAGEID);
-				Toast.makeText(
-						getBaseContext(),
-						value1+value,
-						Toast.LENGTH_SHORT).show();
+				//Toast.makeText(
+						//getBaseContext(),
+						//value1+value,
+						//Toast.LENGTH_SHORT).show();
+				//Log.i("value", value1+value);
 
 				
-				asyncTask4("http://10.0.2.2/login/geoP.php");
+				asyncTask4(SignIn.add+"geoP.php");
 				startActivity(new Intent("com.gmapssimple.PINPOINTDETAILS"));
 				finish();
 				//finish();
@@ -137,7 +141,8 @@ class Touchy extends Overlay {
 	}
 
 
-
+//asynchronous task for insertings attributes on the db - coordinates and user's name -
+//on the image with the specified image_id
 private class AsyncTask4 extends AsyncTask<String,Void,Void>{
 	 private final HttpClient httpclient = new DefaultHttpClient(); 
      
@@ -181,6 +186,7 @@ private class AsyncTask4 extends AsyncTask<String,Void,Void>{
 	
 	
 	protected void onPostExecute(Void unused){
+		//pinpoint creation
 		OverlayItem overlayItem = new OverlayItem(touchedPoint,
 				"What s up", "2on string");
 		CustomPinpoint custom = new CustomPinpoint(dr, getBaseContext());
@@ -253,26 +259,5 @@ protected boolean isRouteDisplayed() {
 }
 
 
-/*private static String convertStreamToString(InputStream is) {
-
-	BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-	StringBuilder sb = new StringBuilder();
-
-	String line = null;
-	try {
-		while ((line = reader.readLine()) != null) {
-			sb.append(line + "\n");
-		}
-	} catch (IOException e) {
-		e.printStackTrace();
-	} finally {
-		try {
-			is.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	return sb.toString();
-}*/
 
 }

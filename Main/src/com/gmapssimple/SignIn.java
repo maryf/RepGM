@@ -1,11 +1,8 @@
 package com.gmapssimple;
 
-import java.io.BufferedReader;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -17,18 +14,14 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -48,8 +41,10 @@ public class SignIn extends Activity {
 	String retPass;
 	TextView t1;
 	SessionManager session;
+	//static variable defining the address to whom the call should be made
+	public static String  add ="http://192.168.1.60/login/";
 	
-	private Object GetURL;
+	//private Object GetURL;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -70,7 +65,7 @@ public class SignIn extends Activity {
 			public void onClick(View arg0) {
 				username1 = etUser.getText().toString();
 				password1 = etPass.getText().toString();
-				getURL("http://10.0.2.2/login/index.php");  
+				getURL(add+"index.php");  
 				}
 		});
 		
@@ -96,9 +91,12 @@ public class SignIn extends Activity {
 		});
 	}
 	
+	
+	
+	//asynchronous task that sends the user's name and the password to the db for configuration
 	private class GetURL extends AsyncTask<String, Void, Void> {  
         private final HttpClient Client = new DefaultHttpClient();  
-        private String Content;  
+        //private String Content;  
         private String Error = null;  
         
           
@@ -132,9 +130,8 @@ public class SignIn extends Activity {
 							retUser = jsonResponse.getString("username");
 							retPass = jsonResponse.getString("pass");
 							//t1.setText(retUser);
-							
-							if (username1.equals(retUser)
-									&& password1.equals(retPass)) {
+							//checks if the returned values match the ones that the user has entered
+							if (username1.equals(retUser) && password1.equals(retPass)) {
 								
 								//t1.setText("prin_session");
 								session.createLoginSession(retUser, retPass);
@@ -143,9 +140,9 @@ public class SignIn extends Activity {
 
 								//Toast.makeText(getApplicationContext(), "SUCCESS!",Toast.LENGTH_SHORT).show();
 									Error="1";
-							} else {
+							}else {
 
-								//Toast.makeText(getBaseContext(),"Invalid Login Details",Toast.LENGTH_SHORT).show();
+								Toast.makeText(getBaseContext(),"Wrong username or password!",Toast.LENGTH_SHORT).show();
 							}
 
 						}

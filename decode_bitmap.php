@@ -1,9 +1,6 @@
 <?php  
 
-$dbhost = "localhost";
-$dbuser = "root";
-$dbpass = "";
-$dbdb = "mobiledb1";
+include 'config.php';
 		
 $b_id = $_POST['image_id'];    
 $conn = mysql_connect($dbhost, $dbuser, $dbpass) or die("connection error");

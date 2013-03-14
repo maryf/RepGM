@@ -1,14 +1,15 @@
 <?php
-//session_start();
+
+include 'config.php';
 
 $username = $_REQUEST['username'];
 $password = $_REQUEST['pass']; 
+$conn = mysql_connect($dbhost, $dbuser, $dbpass) or die("connection error");
+         
+mysql_select_db($dbdb,$conn)or die("database selection error");
 
-$con = mysql_connect("localhost","root","");
-mysql_select_db("mobiledb1", $con);
 
-
-$query = mysql_query("SELECT * FROM user1 WHERE username='$username' AND pass='$password'");
+$query = mysql_query("SELECT username,pass FROM user1 WHERE username='$username' AND pass='$password'");
 $num = mysql_num_rows($query);
 
 if($num == 1){
