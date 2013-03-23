@@ -1,10 +1,7 @@
 package com.gmapssimple;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -106,6 +103,8 @@ public class OpenMap extends MapActivity {
 	private Object GetURL3;
 	String s = null;
 	boolean flag=false;
+	String[] period =new String[] {"byzantine","roman"};
+	int selectedItem=0;
 
 	
 	@Override
@@ -253,6 +252,10 @@ public class OpenMap extends MapActivity {
         
         
         case R.id.menu_search:
+        	
+        	
+        	Dialog();
+        	
             Toast.makeText(OpenMap.this, "Search is Selected", Toast.LENGTH_SHORT).show();
             return true;
  
@@ -278,7 +281,38 @@ public class OpenMap extends MapActivity {
         default:
             return super.onOptionsItemSelected(item);
         }
-    }  
+    }
+    
+    
+    
+    
+  void Dialog() {
+	  AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder.setTitle("Select a time period");	  
+      
+      int selected = selectedItem;	        
+      builder.setSingleChoiceItems(
+      		period, 
+              selected, 
+              new DialogInterface.OnClickListener() {
+          
+          public void onClick(DialogInterface dialog,int which) {
+          	selectedItem=which;
+          	Toast.makeText(OpenMap.this,"You Select Period "+period[selectedItem],Toast.LENGTH_SHORT).show();
+          	//if (selectedItem!=0){
+          	Intent i = new Intent(OpenMap.this, SlideActivity.class);
+          	i.putExtra("period",period[selectedItem] );
+          	startActivity(i);
+          	//}
+            dialog.dismiss();
+          }
+      });
+      AlertDialog alert = builder.create();
+      alert.show();
+      
+	 
+ }   
+    
     
     //asynchronous task making a network call(in a new independent thread) so 
     //all the pinpoints can be shown on the map

@@ -3,7 +3,7 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="7"
+    <uses-sdk android:minSdkVersion="11"
         android:targetSdkVersion="17"></uses-sdk>
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
@@ -146,11 +146,33 @@
         </activity>
         
              
-              <activity
+       <activity
             android:name=".Direction"
             android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="com.gmapssimple.DIRECTION" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+       
+       <activity
+            android:name=".SlideActivity"
+            android:label="@string/title_activity_main" >
+            <intent-filter>
+                <action android:name="com.gmapssimple.SLIDEACTIVITY" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+       
+       <activity
+            android:name=".SingleChoiceItemListExampleActivity"
+            android:label="@string/title_activity_main" >
+            <intent-filter>
+                <action android:name="com.gmapssimple.SINGLECHOICEITEMLISTEXAMPLEACTIVITY" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
