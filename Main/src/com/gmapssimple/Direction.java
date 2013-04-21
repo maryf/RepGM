@@ -14,13 +14,11 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -32,7 +30,6 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -65,19 +62,11 @@ public class Direction extends MapActivity {
 	List<Overlay> overlayList;
 	List<GeoPoint> path = new ArrayList<GeoPoint>();
 
-	Drawable draf,start;
+	Drawable draf;
 
 	int jarraylen,len;
 	HashMap<String, String> map1;
 	String[] lat,lon;
-	String[] routeLatDb;
-	String[] routeLonDb;
-	HttpPost httppost1;
-	HttpEntity entity1;
-	String s;
-	int latPath;
-	int lonPath;
-	String stringLat;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -89,25 +78,20 @@ public class Direction extends MapActivity {
 		map.displayZoomControls(true);
 		map.setBuiltInZoomControls(true);
 		draf = getResources().getDrawable(R.drawable.markerblue);
-		start = getResources().getDrawable(R.drawable.s);
 		overlayList = map.getOverlays();
 		
 		session = new SessionManager(getApplicationContext());
 		
-		Bundle extras = getIntent().getExtras();
-		latPath = extras.getInt("startLatDb");
-		lonPath=extras.getInt("startLonDb");
-		Log.i("sendlatitude", Integer.toString(latPath));
 		//gets the pinpoints that a user has uploaded from the AsyncTaskTrek in the list "path"
 		//and then the getUrl draws the route between those points
-		getPathRoute(SignIn.add+"get_pathid.php");
-		//asyncTaskTrek(SignIn.add+"mytrek.php");
-		Log.i("ok1", path.toString());
+		asyncTaskTrek(SignIn.add+"mytrek.php");
+		Log.i("ok", path.toString());
 		int j=1;
-		for (int i = 0; i < path.size()-1; i++) {
+		for (int i = 0; i < len-1; i++) {
 			GeoPoint geo=path.get(i);
 			int la1=geo.getLatitudeE6();
 			double lats=la1/1E6;
+			//int mary=lats/0.000001;
 			String lat1=String.valueOf(lats);
 			int lo1=geo.getLongitudeE6();
 			double lons=lo1/1E6;
@@ -144,25 +128,27 @@ public class Direction extends MapActivity {
 						+lon2+"&sensor=false");
 				
 				
+				//getURL("http://maps.googleapis.com/maps/api/directions/json?" +
+						//"origin=38.375899,21.685268&destination=38.573721,21.567165&sensor=false&travel_mode=transit");
 				
+				//map.getOverlays().add(new RoutePathOverlay(path_start)); 
+			//}
 				 
 		}
+		//String maryb=String.valueOf(path.get(0).getLatitudeE6()/1E6);
+		//String maryb1=String.valueOf(path.get(0).getLongitudeE6()/1E6);
+		//String maryb2=String.valueOf(path.get(1).getLatitudeE6()/1E6);
+		//String maryb3=String.valueOf(path.get(1).getLongitudeE6()/1E6);
+		//String maryb4=String.valueOf(path.get(2).getLatitudeE6()/1E6);
+		//String maryb5=String.valueOf(path.get(2).getLongitudeE6()/1E6);
+		//Log.i("OKK", maryb+" "+maryb1+" "+maryb2+" "+maryb3+" "+maryb4+" "+maryb5);
 		
+		
+		//getURL("http://maps.googleapis.com/maps/api/directions/json?origin="+maryb+","+maryb1+"&destination="+maryb4+"," 
+				//+maryb5+"&waypoints="+maryb2+","+maryb3+"&sensor=false");
+
 }
 	  
-	
-	public void getPathRoute(String url){
-		try {
-			new GetPathRoute().execute(url).get();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
 	public void getURL(String url) {  
         try {
 			new GetURL().execute(url).get();
@@ -209,7 +195,7 @@ public class Direction extends MapActivity {
 						HttpEntity entity = response.getEntity();
 						 String is1 = EntityUtils.toString(entity);
 						if (entity != null) {
-							Log.i("jsonResponse", is1);
+							//Log.i("jsonResponse", is1);
 							
 							//JSONObject json = new JSONObject(is1.trim());
 							JSONObject json = new JSONObject(is1);
@@ -327,22 +313,14 @@ public class Direction extends MapActivity {
 				pinpoints.add(item);
 				this.populate();
 			}
-			public void getURL3(String url) {  
+			//public void getURL3(String url) {  
 				
-				try {
-					new GetURL3().execute(url).get();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ExecutionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				//new GetURL3().execute(url);
 			
-			 } 
+			 //} 
 			@Override
 			public boolean onTap(int index) {
-		
+				//flag=true;
 				 Toast.makeText(c, "Overlay Item " + pinpoints.get(index) +
 				" tapped!", Toast.LENGTH_LONG).show();
 				 
@@ -351,16 +329,20 @@ public class Direction extends MapActivity {
 				//get the index of the touched pinpoint as well as his coordinates
 				OverlayItem item = pinpoints.get(index); 
 				GeoPoint touchedGeoP=item.getPoint();
+				//Log.i("GEOPOINT", "[" + item.getPoint()+ "]");
 				int touchedLat=touchedGeoP.getLatitudeE6();
-				stringLat=Integer.toString(touchedLat);
+				//String sdfafwfasd=touchedGeoP.toString();
+				//Log.i("TOSTRING",sdfafwfasd);
+				//int touchedLon=touchedGeoP.getLongitudeE6();
+				//stringLat=Integer.toString(touchedLat);
 				
 				
-				getURL3(SignIn.add+"get_imId.php");  
+				//getURL3(SignIn.add+"get_imId.php");  
 				
 					
 				
 				startActivity(new Intent(getApplicationContext(),PinpointView.class));
-				//finish();
+				finish();
 
 				return true;
 			}
@@ -375,7 +357,7 @@ public class Direction extends MapActivity {
 	String ab = null;
 	
 	@Override
-	public synchronized List<GeoPoint> doInBackground(String... urls) {
+	public List<GeoPoint> doInBackground(String... urls) {
 		// TODO Auto-generated method stub
 		
 	try{
@@ -467,7 +449,47 @@ public class Direction extends MapActivity {
 	Log.i("lan", Integer.toString(len));
 	
 	
+	/*int j=1;
+	for (int i = 0; i < len; i++) {
+		GeoPoint geo=path1.get(i);
+		int la1=geo.getLatitudeE6();
+		double lats=la1/1E6;
+		//int mary=lats/0.000001;
+		String lat1=String.valueOf(lats);
+		int lo1=geo.getLongitudeE6();
+		double lons=lo1/1E6;
+		String lon1 = String.valueOf(lons);
+		//lon1=Integer.toString(lons);
+		
+		
+		if (j<len)
+		{
+			GeoPoint geo2=path1.get(j++);
+			
+			int la2=geo2.getLatitudeE6();
+			double lats2=la2/1E6;
+			//int mary=lats/0.000001;
+			String lat2=String.valueOf(lats2);
+			
+			
+			int lo2=geo2.getLongitudeE6();
+			double lons2=lo2/1E6;
+			String lon2 = String.valueOf(lons2);
+			
+			//int late=geo2.getLatitudeE6();
+			//lat2=Integer.toString(late);
+			//int lone=geo2.getLongitudeE6();
+			//lon2=Integer.toString(lone);
+			Log.i("lat1", lat1+" " + " "+ lon1+" " + " "+lat2 +" "+ lon2);
+			//getURL("http://maps.googleapis.com/maps/api/directions/json?origin=lat1,lon1&destination=lat2,lon2&sensor=false"); 
+			//map.getOverlays().add(new RoutePathOverlay(path)); 
 	
+			
+			//new GetURL().execute("http://maps.googleapis.com/maps/api/directions/json?origin=38.2088258,21.7853143&destination=38.2505451,22.0810942&sensor=false&travel_mode=transit"); 
+		
+		}
+	
+	}*/
 
     
 } 
@@ -556,187 +578,6 @@ public class Direction extends MapActivity {
                 _drawStartEnd = markStartEnd;
         }
 }
-	
-	
-	private class GetURL3 extends AsyncTask<String, Void, Void> {
-		private final HttpClient Client = new DefaultHttpClient(); 
-        private String Error = null;  
-        protected void onPreExecute() {  
-        
-        }  
-
-		protected Void doInBackground(String... urls) {
-			try {
-				Log.i("RESPONSE", "ok");
-				//Log.i("stringLa", stringLat);
-				HttpPost httppost2 = new HttpPost(urls[0]);
-				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-				
-				nameValuePairs.add(new BasicNameValuePair("latitude",stringLat));
-				
-				httppost2.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-				HttpResponse response2 = Client.execute(httppost2);
-				Log.i("RESPONSE", "OK");
-				
-				
-				HttpEntity entity2 = response2.getEntity();
-				String inputs = EntityUtils.toString(entity2);
-				Log.i("RESPONSE3", inputs);
-				session.createImageIdSession(inputs);										
-			
-			
-			
-        } catch (ClientProtocolException e) {  
-            Error = e.getMessage();  
-            cancel(true);  
-        }  catch (IOException e2) {
-		// TODO Auto-generated catch block
-		e2.printStackTrace();
-          
-	} 
-
-          
-        return null;  
-		}  
-		protected void onPostExecute(Void unused) {    
-			if (Error ==null ) 
-            	Toast.makeText(getApplicationContext(), "OK!",Toast.LENGTH_SHORT).show();
-            
-	    }  
-		
-	}
-	
-	
-public class GetPathRoute extends AsyncTask<String, Void, Void> {  
-		
-		
-		
-		private final HttpClient httpclient1 = new DefaultHttpClient();
-		
-		Location routeCoordLoc= new Location("");;
-		float distance=0;
-		int[] nearPathId=null;
-		protected void onPreExecute() { 
-			
-			
-		}
-		
-		public Void doInBackground(String... urls) {  
-		try {
-		httppost1 = new HttpPost(urls[0]);
-		
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		
-		nameValuePairs.add(new BasicNameValuePair("lat",Integer.toString(latPath)));
-		
-		httppost1.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-		response = httpclient1.execute(httppost1);
-		
-		entity1 = response.getEntity();
-		String response = EntityUtils.toString(entity1);
-		Log.i("resp", response);
-
-		//tv.setText("ok!");
-		JSONObject json = new JSONObject(response.trim());
-		Log.i("ok", "okmetajsonobj");
-
-		JSONArray jArray = json.getJSONArray("posts");
-		GeoPoint startPoint=new GeoPoint(latPath,lonPath);
-		path.add(startPoint);
-		OverlayItem startOverlay = new OverlayItem(startPoint, "smth", null);
-		
-		//assigns the corresponding image
-		//creating an instance of ItemizedOverlay class CustomPinpoint
-		CustomPinpoint startItemizedOverlay = new CustomPinpoint(start,getApplicationContext());
-		startItemizedOverlay.insertPinpoint(startOverlay);
-		overlayList.add(startItemizedOverlay);
-		map.getOverlays().add(startItemizedOverlay);
-		
-
-		overlayList = map.getOverlays();
-		
-		//getting the route table:path_id,coordinates
-		for (int i = 0; i < jArray.length(); i++) {
-			HashMap<String, String> map1;
-			map1 = new HashMap<String, String>();
-			JSONObject e1 = jArray.getJSONObject(i);
-			s = e1.getString("post");
-			
-			JSONObject jObject = new JSONObject(s);
-
-			routeLatDb = new String[jArray.length()];
-			routeLonDb = new String[jArray.length()];
-			//pathId = new int[jArray.length()];
-			
-			map1.put("lat", jObject.getString("lat"));
-			routeLatDb[i] = map1.get("lat");
-			
-			map1.put("lon", jObject.getString("lon"));
-			routeLonDb[i] = map1.get("lon");
-		
-			//map1.put("path_id", jObject.getInt("path_id"));
-			//pathId[i] = map1.get("path_id");
-
-			
-
-			Log.i("TABLE STARTLAT", routeLatDb[i]);
-
-			
-			
-			//creates an overlay item and an itemizedoverlay
-			//item in order to create the pinpoint and show it on the map
-			GeoPoint k=new GeoPoint(Integer.parseInt(routeLatDb[i]),Integer.parseInt(routeLonDb[i]));
-			OverlayItem overlayItem = new OverlayItem(k, "smth", null);
-			
-			//assigns the corresponding image
-			//creating an instance of ItemizedOverlay class CustomPinpoint
-			CustomPinpoint itemizedOverlay = new CustomPinpoint(draf,getApplicationContext());
-			itemizedOverlay.insertPinpoint(overlayItem);
-			overlayList.add(itemizedOverlay);
-			map.getOverlays().add(itemizedOverlay);
-			
-
-			overlayList = map.getOverlays();
-			Log.i("trexei2", "trexei");
-			path.add(k);
-			Log.i("trexei3", "trexei");
-			Log.i("trek", path.toString());
-			
-			
-			
-			
-			
-
-		}
-		
-		
-		
-		
-		} catch (ClientProtocolException e) {  
-         
-            cancel(true);  
-        } catch (JSONException e1) {
-		Log.e("log_tag", "Error parsing data " + e1.toString());
-		} catch (IOException e2) {
-		// TODO Auto-generated catch block
-		e2.printStackTrace();
-          
-	}
-	return null;  
-	}
-	public void onPostExecute(Void unused) {  
-		
-		
-			map.invalidate();
-        	Toast.makeText(getApplicationContext(), "SUCCESS!",Toast.LENGTH_SHORT).show();
-        	
-        	
-    }
-	
-}
-
 	
 	
 

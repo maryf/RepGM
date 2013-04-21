@@ -13,41 +13,40 @@
     -->
 
     <Button
-        android:id="@+id/log"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:text="Login" />
-
-    <Button
         android:id="@+id/regis"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/log"
-        android:layout_marginTop="14dp"
+        android:layout_below="@+id/about"
+        android:layout_marginTop="104dp"
         android:text="Register" />
 
-    <ImageButton
-        android:id="@+id/about"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/log"
+        android:layout_width="134dp"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/map"
+        android:layout_alignBottom="@+id/about"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/map"
-        android:layout_marginRight="54dp"
-        android:src="@drawable/ic_menu_info_details" />
+        android:layout_marginBottom="16dp"
+        android:text="Login" />
 
     <ImageButton
         android:id="@+id/map"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/regis"
-        android:layout_marginLeft="52dp"
-        android:layout_marginTop="58dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="83dp"
         android:src="@drawable/ic_menu_mapmode" />
+
+    <ImageButton
+        android:id="@+id/about"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/map"
+        android:layout_below="@+id/map"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="90dp"
+        android:src="@drawable/ic_menu_info_details" />
 
 </RelativeLayout>

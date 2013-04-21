@@ -21,7 +21,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -125,7 +124,6 @@ public class SignIn extends Activity {
 						//t1.setText("ok2");
 						entity = response.getEntity();
 						 is1 = EntityUtils.toString(entity);
-						 Log.i("resp", is1);
 						if (entity != null) {
 							
 							JSONObject jsonResponse = new JSONObject(is1);
@@ -156,15 +154,12 @@ public class SignIn extends Activity {
 				//ResponseHandler<String> responseHandler = new BasicResponseHandler();  
                 //Content = Client.execute(httpget, responseHandler);  
             } catch (ClientProtocolException e) {  
-            	//Log.i("Error", Error);
                 Error = e.getMessage();  
                 cancel(true);  
-            } catch (IOException e) {
-            	//Log.i("Error1", Error);
+            } catch (IOException e) {  
                 Error = e.getMessage();  
                 cancel(true);  
             } catch (Exception e) {
-            	//Log.i("Error2", Error);
 				e.printStackTrace();
 			}
 
@@ -180,10 +175,6 @@ public class SignIn extends Activity {
            
             if (Error =="1" ) { 
             	Toast.makeText(getApplicationContext(), "SUCCESS!",Toast.LENGTH_SHORT).show();
-            }
-            else{
-				Toast.makeText(getBaseContext(),"Wrong username or password!",Toast.LENGTH_SHORT).show();
-
             }
         
         }  

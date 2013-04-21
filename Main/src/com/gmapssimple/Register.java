@@ -15,7 +15,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -87,7 +86,7 @@ public class Register extends Activity implements OnClickListener {
 	
 	private class AsyncTask6 extends AsyncTask<String,Void,Void>{
 		private final HttpClient httpclient = new DefaultHttpClient();  
-		String getVal;
+         
         private String Error = null;
 		@Override
 		protected Void doInBackground(String... urls) {
@@ -107,7 +106,7 @@ public class Register extends Activity implements OnClickListener {
 				response = httpclient.execute(httppost);
 
 				entity = response.getEntity();
-				getVal = EntityUtils.toString(entity);
+				is = entity.getContent();
 		
 			} catch (Exception e) {
 				Error="1";
@@ -123,13 +122,10 @@ public class Register extends Activity implements OnClickListener {
 		
 		protected void onPostExecute(Void unused) {  
         	
-	            if (Error !="1" && getVal.equals("ok")) { 
-	            	Toast.makeText(getApplicationContext(), "Registration Completed!",Toast.LENGTH_SHORT).show();
+	            if (Error !="1" ) { 
+	            	Toast.makeText(getApplicationContext(), "SUCCESS!",Toast.LENGTH_SHORT).show();
 	            	startActivity(new Intent("com.gmapssimple.SIGNIN"));
 					finish();
-	            }
-	            else{
-	            	Toast.makeText(getApplicationContext(), "please try again with a different username or later",Toast.LENGTH_SHORT).show();
 	            }
 	           
 	        }  

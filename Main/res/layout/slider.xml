@@ -9,7 +9,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/TextViewTopTitle"
-        android:text=""
+        android:text="slider"
         android:textColor="#00FFF0"
         android:layout_gravity="center_vertical|center_horizontal"
         android:gravity="top|center"></TextView>

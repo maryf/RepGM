@@ -2,50 +2,27 @@
 
 include 'config.php';
 
+$usname=$_REQUEST['username'];
+$bit=$_REQUEST['bitmap'];
+
+$conn = mysql_connect($dbhost, $dbuser, $dbpass) or die("connection error");
+         
+mysql_select_db($dbdb,$conn)or die("database selection error");
+
+$result2 =mysql_query("SELECT image_id FROM pic WHERE pic.username='$usname' AND pic.bitmap='$bit'");
+$query2=mysql_fetch_array($result2);
+if ($query2==""){
+   $query=mysql_query("insert into pic (username,bitmap) values ('".$usname."','".$bit."')");
 
 
-try {		
-	$db = new PDO('mysql:host=localhost;dbname=mobiledb1', $dbuser, $dbpass);
-	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	$db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-	
-	
-	
-	if ($base = $db->prepare("SELECT image_id FROM pic WHERE username=? AND pic.bitmap=?")){
-		$usname=$_REQUEST['username'];
-		$bit=$_REQUEST['bitmap'];
-		$base->execute(array($usname, $bit));
-		$count = $base->rowCount();
-		if ($count==0){
-	
-			if($baseup = $db->prepare("UPDATE pic SET bitmap=? WHERE image_id=?")){
-			$bit=$_REQUEST['bitmap'];
-			$imagei=$_REQUEST['image_id'];
+	$result =mysql_query("SELECT image_id FROM pic WHERE pic.username='$usname' AND pic.bitmap='$bit'");
+	$query1=mysql_fetch_array($result);
 
-			$baseup->execute(array($bit, $imagei));
-			echo "ok";
-	
-			}
-			else{
-			echo "wrong";
-			}
-	
-		}
-		
-	else{
-	echo "exists";
-	}
-	
-	
+	echo ($query1['image_id']);
 }
-} catch (PDOException $e) {
-    print "Error!: " . $e->getMessage() . "<br/>";
-    die();
-}
+if ($query2!=""){
 
-$db = null;
-
-
-
+echo "exists";}
+	
 
 ?>

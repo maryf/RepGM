@@ -2,59 +2,30 @@
 
 include 'config.php';
 
-try {		
-	$db = new PDO('mysql:host=localhost;dbname=mobiledb1', $dbuser, $dbpass);
-	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	$db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-	
-	
-	
-	if ($setrate = $db->prepare("SELECT rating, num_rat FROM pic WHERE image_id=?")){
-		$b_id = $_POST['image_id']; 
-		$setrate->bindValue(1, $b_id, PDO::PARAM_INT);
-		$setrate->execute();
-		$row=$setrate->fetch();
-		$counter=$row['num_rat']+1;
-		$grade=$_POST['rating1'];
-		$sin_rating=$row['rating']+$grade;
-		$output=$sin_rating/$counter;
+$conn = mysql_connect($dbhost, $dbuser, $dbpass) or die("connection error");
+         
+mysql_select_db($dbdb,$conn)or die("database selection error");
+
+
+$b_id = $_POST['image_id']; 
+$grade=$_POST['rating1'];
+
+
+ $result =mysql_query("SELECT rating, num_rat FROM pic WHERE image_id='$b_id'");
+
+ $row = mysql_fetch_array($result);
  
-		$k=round($output,1);
+ $counter=$row['num_rat']+1;
+ 
+ $sin_rating=$row['rating']+$grade;
+ $output=$sin_rating/$counter;
+ 
+ $k=round($output,1);
 
-        echo $k;
-	}	
-	else{
-		echo "wrong";
-		$setrate=null;
-	}
-	
-	
-	if($rate = $db->prepare("UPDATE pic SET final_rating='$k' , rating='$sin_rating',  num_rat='$counter'  WHERE image_id=?")){
-		$rate->bindValue(1, $b_id, PDO::PARAM_INT);
-		$rate->execute();
-		echo "trexei";
-		
-	
-			}
-	else{
-		echo "wrong";
-		$rate=null;
-	}
-	
-		
-		
-	
-	
-	
-} catch (PDOException $e) {
-    print "Error!: " . $e->getMessage() . "<br/>";
-    die();
-}
+        echo json_encode($k);
 
-$db = null;
-
-
-
-
+$p=mysql_query("UPDATE pic SET final_rating='$k' , rating='$sin_rating',  num_rat='$counter'  WHERE image_id='$b_id'");
+ 
+mysql_close($con);
 
 ?>

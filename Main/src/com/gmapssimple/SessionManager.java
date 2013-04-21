@@ -19,8 +19,6 @@ public class SessionManager {
 	public static final String KEY_LAT = "latitude";
 	public static final String KEY_PASS = "pass";
 	public static final String KEY_IMAGEID = "image_id";
-	public static final String KEY_PATH = "path_flag";
-	public static final String KEY_PATHID = "path_id";
 
 	
 	public SessionManager(Context context) {
@@ -58,25 +56,7 @@ public class SessionManager {
 		editor.commit();
 	}
 
-public void pathsession(Boolean path) {
-		
-		//editor.putBoolean(IS_LOGIN, true);
-
-		editor.putBoolean(KEY_PATH, path);
-
-		editor.commit();
-	}
-
-
-public void pathIdsession(int path_id) {
 	
-	//editor.putBoolean(IS_LOGIN, true);
-
-	editor.putInt(KEY_PATHID, path_id);
-
-	editor.commit();
-}
-
 
 
 	public HashMap<String, String> getUserDetails() {
@@ -109,29 +89,7 @@ public void pathIdsession(int path_id) {
 		return user;
 	}
 	
-	public boolean getPath() {
-		//HashMap<String, String> user = new HashMap<String, String>();
-		boolean path_flag=pref.getBoolean(KEY_PATH, false);
-		//user.put(KEY_PATH, pref.getString(KEY_PATH, null));
-		
-		return path_flag;
-	}
-	
-	
-	public int getPathId() {
-		//HashMap<String, String> user = new HashMap<String, String>();
-		int path_id=pref.getInt(KEY_PATHID, 0);
-		//user.put(KEY_PATH, pref.getString(KEY_PATH, null));
-		
-		return path_id;
-	}
-	
-	public void finishPath() {
-		editor.remove(KEY_PATH);
-		editor.remove(KEY_PATHID);
-		editor.commit();
-		
-	}
+
 	
 	public void logoutUser() {
 		

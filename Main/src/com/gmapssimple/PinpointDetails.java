@@ -63,23 +63,12 @@ public class PinpointDetails extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				wikiLink = etWiki.getText().toString();
-				//put inside asyntask
 				if (wikiLink==""){ Toast.makeText(getApplicationContext(), "you have to enter a link",
-						Toast.LENGTH_LONG).show();
-				}
-				else{
-					asyncTask7(SignIn.add+"insert_wikiLink.php");
-					boolean pathMode=session.getPath();
-					if (pathMode){
-						startActivity(new Intent(
-								"com.gmapssimple.SHOWMAP"));
-						finish();
-					}else{
-						startActivity(new Intent(
-								"com.gmapssimple.OPENMAP"));
-						finish();
-					}
-				}
+						Toast.LENGTH_LONG).show();}else{
+				asyncTask7(SignIn.add+"insert_wikiLink.php");
+				startActivity(new Intent(
+						"com.gmapssimple.OPENMAP"));
+				finish();}
 			}
 		});
 
@@ -104,7 +93,7 @@ public class PinpointDetails extends Activity {
                     	
                     	break;
                     case R.id.radio2:
-                    	typ="palace";
+                    	typ="archeological_site";
                     	 t = Toast.makeText(getBaseContext(),"3" ,
             					Toast.LENGTH_LONG);
                     	t.show();
@@ -113,22 +102,6 @@ public class PinpointDetails extends Activity {
                     case R.id.radio3: 
                     	typ="monument";
                       t = Toast.makeText(getBaseContext(),"4" ,
-            					Toast.LENGTH_LONG);
-                    	t.show();
-                    	
-                    	break;
-                    	
-                    case R.id.radio4:
-                    	typ="archeological_site";
-                    	 t = Toast.makeText(getBaseContext(),"3" ,
-            					Toast.LENGTH_LONG);
-                    	t.show();
-                    	
-                    	break;
-                    	
-                    case R.id.radio5:
-                    	typ="church";
-                    	 t = Toast.makeText(getBaseContext(),"3" ,
             					Toast.LENGTH_LONG);
                     	t.show();
                     	
@@ -145,56 +118,18 @@ public class PinpointDetails extends Activity {
               
                 
                switch (checkedId) {
-               		
-               		case R.id.arc:  
-               			tEra="archaic";
-               			Toast t = Toast.makeText(getBaseContext(),tEra,Toast.LENGTH_LONG);
-               			t.show();
-               			break;
-                  	
-                  	
-                  	
-               		case R.id.clas:  
-               			tEra="classical";
-               			t = Toast.makeText(getBaseContext(),tEra,Toast.LENGTH_LONG);
-               			t.show();
-               			break;
-                   	
-                   	
-               		case R.id.hellenist:  
-               			tEra="hellenistic";
-               			t = Toast.makeText(getBaseContext(),tEra,Toast.LENGTH_LONG);
-               			t.show();
-               			break;
-                   	
-                   	
-                   	
-               		case R.id.rom: 
+                   case R.id.byz:  
+                   	tEra="byzantine";
+                   	Toast t = Toast.makeText(getBaseContext(),tEra,Toast.LENGTH_LONG);
+                   	t.show();
+                   	break;
+                   case R.id.rom: 
                 	   tEra="roman";
-                   	   t = Toast.makeText(getBaseContext(),tEra ,Toast.LENGTH_LONG);
-                   	   t.show();
-                   	   break;
-                   	
-                   	
-                   case R.id.byz: 
-                	   tEra="byzantine";
-                   	 	t = Toast.makeText(getBaseContext(),tEra ,Toast.LENGTH_LONG);
-                   	 	t.show();
-                   	 	break;
-                   	
-                   	
-                   case R.id.ottom: 
-                	   tEra="ottoman";
-                   	   t = Toast.makeText(getBaseContext(),tEra ,Toast.LENGTH_LONG);
-                   	   t.show();
-                   	   break;
-                   	
-                   	
-                   case R.id.mod: 
-                	   tEra="modern";
-                   	   t = Toast.makeText(getBaseContext(),tEra ,Toast.LENGTH_LONG);
-                   	   t.show();
-                   	   break;
+                   	 t = Toast.makeText(getBaseContext(),tEra ,
+           					Toast.LENGTH_LONG);
+                   	t.show();
+                   	//ring();
+                   	break;
                    
                }
                 
@@ -213,7 +148,29 @@ public class PinpointDetails extends Activity {
 	
 	
 	
-	
+	/*public void onRadioButtonClicked(View view) {
+	    // Is the button now checked?
+	    boolean checked = ((RadioButton) view).isChecked();
+	    
+	    // Check which radio button was clicked
+	    switch(view.getId()) {
+	        case R.id.byz:
+	            if (checked)
+	            	tEra="byzantine";
+	            	Toast.makeText(this, "",
+	        				Toast.LENGTH_LONG).show();
+	            
+	               
+	            break;
+	        case R.id.rom:
+	        	tEra="roman";
+	            if (checked)
+	                
+	            	Toast.makeText(this, "roman",
+	        				Toast.LENGTH_LONG).show();
+	            break;
+	    }
+	}*/
 	
 	
 	public void asyncTask7(String url) {  
@@ -240,7 +197,6 @@ public class PinpointDetails extends Activity {
 					//			Toast.LENGTH_LONG).show();}
 				
 				nameValuePairs = new ArrayList<NameValuePair>();
-				
 				nameValuePairs.add(new BasicNameValuePair("wiki_link", wikiLink));
 				nameValuePairs.add(new BasicNameValuePair("image_id", value1));
 				nameValuePairs.add(new BasicNameValuePair("era", tEra));

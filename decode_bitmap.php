@@ -1,34 +1,30 @@
 <?php  
 
-
 include 'config.php';
 		
+$b_id = $_POST['image_id'];    
+$conn = mysql_connect($dbhost, $dbuser, $dbpass) or die("connection error");
+         
+mysql_select_db($dbdb,$conn)or die("database selection error");
 
-   
-try {		
-	$db = new PDO('mysql:host=localhost;dbname=mobiledb1', $dbuser, $dbpass);
-	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	$db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-	
-	
-	if ($decbit = $db->prepare("SELECT  type ,bitmap , era , wiki_link , final_rating FROM pic WHERE image_id=?")){
-	$b_id = $_POST['image_id']; 
-	$decbit->bindValue(1, $b_id, PDO::PARAM_INT);
-	$decbit->execute();
-	$list=$decbit->fetch();
-	echo json_encode($list);
-	}
-	else{
-	echo "wrong";
-	$decbit = null;
-	}
-	
-	}catch (PDOException $e) {
-    print "Error!: " . $e->getMessage() . "<br/>";
-    die();
-}
+ 
+$query =mysql_query("SELECT bitmap , type , era , wiki_link , final_rating FROM pic WHERE pic.image_id='$b_id'");
 
-$db = null;
+$num = mysql_num_rows($query);
+
+
+if($num == 1){
+
+	while ($list=mysql_fetch_array($query)){
+	
+		$output=$list;
+        echo json_encode($output);
+		
+	}
+	
+    mysql_close();
+	}
+
 
 
 ?>

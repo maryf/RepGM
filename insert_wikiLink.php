@@ -2,44 +2,20 @@
 
 include 'config.php';
 
-
-try {		
-	$db = new PDO('mysql:host=localhost;dbname=mobiledb1', $dbuser, $dbpass);
-	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	$db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-	
-	
-	
-	if($insertLink = $db->prepare("UPDATE pic SET pic.wiki_link=? , pic.era=?, pic.type=?  WHERE image_id=?")){
-		$link=$_POST['wiki_link'];
-		$imaid=$_POST['image_id'];
-		$erap=$_POST['era'];
-		$tip=$_POST['type'];
+$link=$_POST['wiki_link'];
+$imaid=$_POST['image_id'];
+$erap=$_POST['era'];
+$tip=$_POST['type'];
 		
+$conn = mysql_connect($dbhost, $dbuser, $dbpass) or die("connection error");
+mysql_select_db($dbdb,$conn)or die("database selection error");
+
+
+
+$result =mysql_query("UPDATE pic SET pic.wiki_link='$link' , pic.era='$erap', pic.type='$tip'  WHERE image_id='$imaid'");
+$query1=mysql_fetch_array($result);
+
 		
-		$insertLink->bindValue(1, $link, PDO::PARAM_STR);
-		$insertLink->bindValue(2, $erap, PDO::PARAM_STR);
-		$insertLink->bindValue(3, $tip, PDO::PARAM_STR);
-		$insertLink->bindValue(4, $imaid, PDO::PARAM_INT);
-		$insertLink->execute();
-	
-	}
-	else{
-		echo "wrong";
-	}
-	
-	
-	
-	}catch (PDOException $e) {
-    print "Error!: " . $e->getMessage() . "<br/>";
-    die();
-}
-
-$db = null;
-
-
-
-
-
+              	
 				 
 ?>

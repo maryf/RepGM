@@ -1,5 +1,6 @@
 package com.gmapssimple;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -15,7 +16,6 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +24,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
@@ -32,14 +31,14 @@ import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
-import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
 public class CreatePin extends MapActivity {
 	
-	HttpPost httppost;
-	HttpResponse response;
+	//HttpClient httpclient;
+	HttpPost httppost, httppost1;
+	HttpResponse response, response1;
 	HttpEntity entity;
 	List<NameValuePair> nameValuePairs;
 	ArrayList<HashMap<String, String>> mylist;
@@ -48,16 +47,14 @@ public class CreatePin extends MapActivity {
 	long stop;
 	int x;
 	int y;
-	String value,value1;
-	GeoPoint touchedPoint, geoP;
+	String value,value1,imageid;
+	GeoPoint touchedPoint;
 	List<Overlay> overlayList;
 	MapView map;
 	Drawable dr,dr1;
 	MapController mControl;
 	SessionManager session;
-	MyLocationOverlay myLocation; 
-	int lat_path;
-	int lon_path;
+	
 	
 	
 	
@@ -74,14 +71,11 @@ public class CreatePin extends MapActivity {
 		mControl.setZoom(11);
 		map.displayZoomControls(true);
 		map.setBuiltInZoomControls(true);
-		TextView tv=(TextView) findViewById(R.id.textView1);
-		dr = getResources().getDrawable(R.drawable.markerblue);
-		
 		Touchy t = new Touchy();
 		overlayList = map.getOverlays();
 		overlayList.add(t);
 		
-		
+		dr = getResources().getDrawable(R.drawable.markerblue);
 		
 		
 	}
@@ -89,10 +83,7 @@ public class CreatePin extends MapActivity {
 
 	public void asyncTask4(String url) {  
         new AsyncTask4().execute(url);  
-    } 
-	
-	
-	 
+    }  
 
 class Touchy extends Overlay {
 
@@ -106,7 +97,10 @@ class Touchy extends Overlay {
 				y = (int) e.getY();
 
 				touchedPoint = map.getProjection().fromPixels(x, y);
-				
+				// Toast t=Toast.makeText(getBaseContext(), x/ 1E6 ,
+				// Toast.LENGTH_LONG);
+				// t.show();
+				// touchedPoint=new GeoPoint((int)(x * 1E6), (int)(y * 1E6));
 				Toast.makeText(
 						getBaseContext(),
 						touchedPoint.getLatitudeE6() / 1e6 + ","
@@ -126,10 +120,20 @@ class Touchy extends Overlay {
 				//the session of the user's name is created
 				value = user.get(SessionManager.KEY_NAME);
 				
+				//the session of the image id is created
+				HashMap<String, String> image = session.getImageId();
+				value1 = image.get(SessionManager.KEY_IMAGEID);
+				//Toast.makeText(
+						//getBaseContext(),
+						//value1+value,
+						//Toast.LENGTH_SHORT).show();
+				//Log.i("value", value1+value);
+
 				
 				asyncTask4(SignIn.add+"geoP.php");
-				startActivity(new Intent("com.gmapssimple.UPLOADIMAGE"));
+				startActivity(new Intent("com.gmapssimple.PINPOINTDETAILS"));
 				finish();
+				//finish();
 			}
 			return false;
 
@@ -137,7 +141,7 @@ class Touchy extends Overlay {
 	}
 
 
-//asynchronous task for inserting attributes on the db - coordinates and user's name -
+//asynchronous task for insertings attributes on the db - coordinates and user's name -
 //on the image with the specified image_id
 private class AsyncTask4 extends AsyncTask<String,Void,Void>{
 	 private final HttpClient httpclient = new DefaultHttpClient(); 
@@ -154,31 +158,29 @@ private class AsyncTask4 extends AsyncTask<String,Void,Void>{
 			String b = Integer.toString(y);
 
 			nameValuePairs = new ArrayList<NameValuePair>();
-			nameValuePairs.add(new BasicNameValuePair("latitude", Integer
+			nameValuePairs.add(new BasicNameValuePair("lat", Integer
 					.toString(touchedPoint.getLatitudeE6())));
-			Log.i("lat", Integer
-					.toString(touchedPoint.getLatitudeE6()));
-			nameValuePairs.add(new BasicNameValuePair("longitude", Integer
+			nameValuePairs.add(new BasicNameValuePair("long", Integer
 					.toString(touchedPoint.getLongitudeE6())));
 			nameValuePairs.add(new BasicNameValuePair("username", value));
-			Log.i("user", value);
-			//nameValuePairs.add(new BasicNameValuePair("image_id", value1));
+			nameValuePairs.add(new BasicNameValuePair("image_id", value1));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
+			// Toast.makeText(this, responseBody,
+			// Toast.LENGTH_LONG).show();
 			response = httpclient.execute(httppost);
 			entity = response.getEntity();
-			String imageid1 = EntityUtils.toString(entity);
-			Log.i("session", imageid1);
-			session.createImageIdSession(imageid1);
+			is = entity.getContent();
 			
 			// httpclient.getConnectionManager().shutdown();
 		} catch (Exception e1) {
-			// TODO Auto-generated method stub
 			Log.e("log_tag",
 					"Error in http connection " + e1.toString());
+			
 		}
 		
 		
+		// TODO Auto-generated method stub
 		return null;
 	}
 	
@@ -197,9 +199,6 @@ private class AsyncTask4 extends AsyncTask<String,Void,Void>{
 	}
 	
 }
-
-
-
 
 class CustomPinpoint extends ItemizedOverlay<OverlayItem> {
 	

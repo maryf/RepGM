@@ -1,15 +1,14 @@
 package com.gmapssimple;
 
-
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -22,12 +21,9 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
-import com.google.android.maps.MyLocationOverlay;
-
 
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -47,14 +43,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+//import com.gmapssimple.Base64;
 
 public class UploadImage extends Activity {
 	private static final int SELECT_PICTURE = 1;
 	private String selectedImagePath;
+	// private String filemanagerstring;
+	// private ImageView imageView1;
 	InputStream is;
 	String imageFilePath,imageid1;
 	Button but, butt2,  butt3;
 	TextView tv, tv2;
+	//HttpClient httpclient;
 	HttpPost httppost;
 	HttpResponse response;
 	HttpEntity entity;
@@ -65,7 +65,6 @@ public class UploadImage extends Activity {
 	Bitmap bitmapOrg;
 	ByteArrayOutputStream bao;
 	byte [] ba ;
-	String value1,flag;
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -86,6 +85,7 @@ public class UploadImage extends Activity {
 				intent.setType("image/*");
 				startActivityForResult(Intent.createChooser(intent, "Message"),
 						1);
+
 			}
 		});
 
@@ -97,11 +97,12 @@ public class UploadImage extends Activity {
 	public void asyncTask5(String url) {  
         new AsyncTask5().execute(url);  
     }  
-	 
+
 	
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
 			if (requestCode == SELECT_PICTURE) {
+
 				Uri selectedImageUri = data.getData();
 				selectedImagePath = getPath(selectedImageUri);
 				
@@ -112,7 +113,7 @@ public class UploadImage extends Activity {
 		}
 
 			
-		
+		//try{
 		  	// decode in bitmap format the image that the user selects from his gallery
 			  	bitmapOrg= BitmapFactory.decodeFile(selectedImagePath);
 		     
@@ -122,17 +123,25 @@ public class UploadImage extends Activity {
 			  	ba = bao.toByteArray();
 			  	//converts byte array to string so it can be saved in the db
 			  	ba1=Base64.encodeToString(ba, Base64.DEFAULT);
-		  		 	
-	 	
+		  	//catch(Exception e){
+		  	//Log.v("getView", "Exception: " + e.toString());
+		  	//catch(OutOfMemoryError e){
+	         // bao=new  ByteArrayOutputStream();
+	          //bitmapOrg.compress(Bitmap.CompressFormat.JPEG,50, bao);
+	          //ba=bao.toByteArray();
+	          //ba1=Base64.encodeToString(ba, Base64.DEFAULT);
+	          //Log.e("EWN", "Out of memory error catched");
+	    //  }
 		
 		
-	 	 asyncTask5(SignIn.add+"base.php");
+		
+	 	  //ba1=Base64.encodeBytes(ba);	   
+	 			   //encodeBytes(ba);
+	 	 // tv.setText(ba1);
 		
 		
-	        
-	    
 		
-      
+	 	 asyncTask5(SignIn.add+"base.php");   
 		
 
 	}
@@ -147,9 +156,6 @@ public class UploadImage extends Activity {
 				name = user.get(SessionManager.KEY_NAME);
 				// tv2.setText(name);
 				
-				HashMap<String, String> image = session.getImageId();
-				value1 = image.get(SessionManager.KEY_IMAGEID);
-				Log.i("imi", value1);
 				
 				httppost = new HttpPost(urls[0]);
 				//httppost = new HttpPost("http://192.168.1.60/login/base.php");
@@ -157,14 +163,14 @@ public class UploadImage extends Activity {
 				nameValuePairs = new ArrayList<NameValuePair>();
 				nameValuePairs.add(new BasicNameValuePair("bitmap", ba1));
 				nameValuePairs.add(new BasicNameValuePair("username", name));
-				nameValuePairs.add(new BasicNameValuePair("image_id", value1));
 				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 				response = httpclient.execute(httppost);
 				entity = response.getEntity();
 				//is = entity.getContent();
-				flag = EntityUtils.toString(entity);
-				Log.i("exists",flag);
+				imageid1 = EntityUtils.toString(entity);
 				
+				
+				// tv2.setText("Step 2, pick the place on the map to pin the picture");
 			} catch (Exception e) {
 				Log.e("log_tag", "Error in http connection " + e.toString());
 				//tv.setText("Connection error");
@@ -176,23 +182,22 @@ public class UploadImage extends Activity {
 
 			
 			//checks if the user has already uploaded the specific image
-			if (flag.equals("exists")){
+			if (imageid1.equals("exists")){
 				Toast.makeText(getApplicationContext(), 
 						"You have already uploaded this image,please select another one",
 						Toast.LENGTH_SHORT).show();
 				
 				
 			}
-			
-			
+			//if not the session of the image id is created
 			else{
 			
-					
-					startActivity(new Intent(
-							"com.gmapssimple.PINPOINTDETAILS"));
-					finish();
-				}
-		
+			session.createImageIdSession(imageid1);
+			
+			startActivity(new Intent(
+					"com.gmapssimple.CREATEPIN"));
+			finish();
+			}
 		}
 		
 	}
