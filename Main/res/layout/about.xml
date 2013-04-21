@@ -11,7 +11,7 @@
 <TextView  android:id="@+id/textView1"
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" 
-    android:text="" android:textSize="12px"
+    android:text="Copyrights" 
     android:textColorLink="#FFFF00"
     android:textStyle="bold"
     />

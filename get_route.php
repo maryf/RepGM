@@ -1,7 +1,7 @@
 <?php
 error_reporting(~E_NOTICE);
 
-include 'config.php';     
+include 'config.php';
 
 try {		
 	$db = new PDO('mysql:host=localhost;dbname=mobiledb1', $dbuser, $dbpass);
@@ -10,26 +10,31 @@ try {
 	
 	
 	
-	if ($reg = $db->prepare("INSERT INTO user1 (username,pass) values (?, ?)")){
-	$username = $_POST['username']; 
-	$pass = $_POST['pass'];
-	$reg->execute(array($username, $pass));
-	echo "ok";
+	if ($getr = $db->prepare("SELECT * FROM path")){
+	$getr->execute();
+	
+	
+	$posts = array();
+	while($post=$getr->fetch()){
+		$posts[] = array('post'=>$post);
+	}
+	header('Content-type: application/json');
+	echo json_encode(array('posts'=>$posts));
 	}
 	else{
 	echo "wrong";
-	$reg = null;
+	$getr = null;
 	}
 	
 	
-} catch (PDOException $e) {
+	}catch (PDOException $e) {
     print "Error!: " . $e->getMessage() . "<br/>";
     die();
 }
 
 $db = null;
 
-
+	
 
 
 ?>

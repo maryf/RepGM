@@ -30,6 +30,7 @@ import org.json.JSONObject;
 //import com.gmapssimple.R;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -55,6 +56,7 @@ public class SlideActivity extends Activity {
 	int jarraylen;
 	String getPeriod;
 	ArrayList<Bitmap> bitmapArray ;
+	String Error = null;
 
 	
 	
@@ -67,8 +69,8 @@ public class SlideActivity extends Activity {
 	        getPeriod = intent.getStringExtra("period");
 	        Log.i("messag", getPeriod);
 	        
-	        getURL1(SignIn.add+"slide_bitmaps.php");
-	        
+	        sliderAsTask(SignIn.add+"slide_bitmaps.php");
+	        if (Error==null){
 	        
 	        final Handler mHandler = new Handler();
 
@@ -100,7 +102,9 @@ public class SlideActivity extends Activity {
 	        }, delay, period);
 	        
 			 
-			       
+	        } 
+	        else Toast.makeText(getApplicationContext(), "there are no images in this time period",Toast.LENGTH_SHORT).show();
+
 	    }
 	
 	
@@ -132,37 +136,43 @@ public class SlideActivity extends Activity {
 	    }
 	    
 	    
-	    public void getURL1(String url) {  
+	    public void sliderAsTask(String url) {  
 			
-			try {
-				new GetURL1().execute(url).get();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				Log.i("interrupted","interrupte");
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				Log.i("execution","execution");
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+				try {
+					new SliderAsTask().execute(url).get();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			
 		
 		 } 
 	    
 	    
 	    
-//async task class for getting the images (which belong to a specific time era) from the database    
-public class GetURL1 extends AsyncTask<String, Void, String[]> {  
+//async task class for getting the images (that belong to a specific time era) from the database    
+public class SliderAsTask extends AsyncTask<String, Void, Bitmap[]> {  
 		
 			
 			
-			private final HttpClient httpclient1 = new DefaultHttpClient();
-			private String Content;  
-			private String Error = null; 
+			private final HttpClient httpclient1 = new DefaultHttpClient();  
 			//String url = "http://192.168.1.60/login/selpic.php";
-			protected void onPreExecute() {  
+			//ProgressDialog dialog;
+			
+			@Override
+			protected void onPreExecute(){
+
+				//dialog=ProgressDialog.show(SlideActivity.this,"","Loading Images");
+				//dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+				
 			}
 			
-			public String[] doInBackground(String... urls) {  
+			@Override
+			public Bitmap[] doInBackground(String... urls) {  
 			try {
 			HttpPost httppost1 = new HttpPost(urls[0]);
 			List<NameValuePair> nameValuePairs1 = new ArrayList<NameValuePair>();
@@ -170,31 +180,29 @@ public class GetURL1 extends AsyncTask<String, Void, String[]> {
    			Log.i("ok1", "OK!");
    			
    			
-   			httppost1.setEntity(new UrlEncodedFormEntity(nameValuePairs1));
-			//HttpGet httpget = new HttpGet(urls[0]);
-			//HttpEntity entity1 = httpclient1.execute(httpget).getEntity();
-			//String response = EntityUtils.toString(entity1);
+   			httppost1.setEntity(new UrlEncodedFormEntity(nameValuePairs1));;
 			
    			
    			HttpResponse response1 = httpclient1.execute(httppost1);
    			HttpEntity entity1 = response1.getEntity();
    		
 			String is = EntityUtils.toString(entity1);
+			Log.i("strinngresp", is);
+			
    			
-   			Log.i("ok2",is);
-			//tv.setText("ok!");
-   			
-   			//HttpResponse response = httpclient1.execute(httppost1);
-   			//HttpEntity entity1 = response.getEntity();
-   			//HttpGet httpget = new HttpGet(urls[0]);
-			// get the response entity
-			//entity1 = Client.execute(httpget).getEntity();
-			//String is = EntityUtils.toString(entity1);
+		
 			JSONObject json = new JSONObject(is.trim());
+			
 			
 			//JSONObject jsonResponse = new JSONObject(is);
 
 			JSONArray jArray = json.getJSONArray("posts");
+			Log.i("JSON", Boolean.toString(jArray.isNull(0)));
+			if (jArray.isNull(0)){
+				Error="1";
+   	        	
+			}
+			else{
 			Log.i("ok3", "OK!");
 			mylist = new ArrayList<HashMap<String, String>>();
 			jarraylen=jArray.length();
@@ -204,6 +212,7 @@ public class GetURL1 extends AsyncTask<String, Void, String[]> {
 
 				HashMap<String, String> map = new HashMap<String, String>();
 				JSONObject e1 = jArray.getJSONObject(i);
+				
 				String s = e1.getString("post");
 				
 				JSONObject jObject = new JSONObject(s);
@@ -219,25 +228,25 @@ public class GetURL1 extends AsyncTask<String, Void, String[]> {
 				byte[] decodedString = Base64.decode(bit[i], Base64.DEFAULT);
 				Log.i("decoded", decodedString.toString());
 				
-				bit_array[i]=BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-				//bitmapArray = new ArrayList<Bitmap>();
-				//bitmapArray.add(bit_array); // Add a bitmap
+				//BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+				//scale for avoiding out of memory exception
+				BitmapFactory.Options o = new BitmapFactory.Options();
+				o.inJustDecodeBounds = true;
+				BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length,o);
 				
 				
-				//map.put("type", jObject.getString("type"));
-				//typ[i] = map.get("type");
-				
-				//map.put("image_id", jObject.getString("image_id"));
-				//imid[i] = map.get("image_id");
-				//Log.i("Toast", bit_array[i].toString());
-				
-				//mylist.add(map);
-
-				
-				
-				
-			
+				int scale = 1;
+		        if (o.outHeight > 10 || o.outWidth > 10) {
+		            scale = (int)Math.pow(2, (int) Math.round(Math.log(500 / 
+		               (double) Math.max(o.outHeight, o.outWidth)) / Math.log(0.5)));
+		        }
+		        BitmapFactory.Options o2 = new BitmapFactory.Options();
+		        o2.inSampleSize = scale;
+		       
+				bit_array[i]=BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length,o2);
+				}
 			}
+			
 			
 			
 			
@@ -247,19 +256,21 @@ public class GetURL1 extends AsyncTask<String, Void, String[]> {
                 cancel(true);  
             } catch (JSONException e1) {
 			Log.e("log_tag1", "Error parsing data " + e1.toString());
+			Error="1";
 			} catch (IOException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
+			Error="1";
               
 		}
-			return bit;
+			return bit_array;
 		}
 		public void onPostExecute(String[] bitArray) { 
 			
-			Log.i("array", bit_array.toString());
-			
+			//Log.i("array", bitArray.toString());
+			if (Error==null)
         	Toast.makeText(getApplicationContext(), "SUCCESS!",Toast.LENGTH_SHORT).show();
-
+			//dialog.dismiss();
 				
         }
 		

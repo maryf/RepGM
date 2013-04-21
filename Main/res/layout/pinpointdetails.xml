@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+	<LinearLayout 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -27,17 +30,55 @@
     android:orientation="vertical"
     android:id="@+id/era" >
     
+         
+    <RadioButton
+        android:id="@+id/arc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Archaic (700-480 BC)"/>    
+        
+    
+     <RadioButton
+        android:id="@+id/clas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Classical (480-323 BC)"/> 
+        
+     
+      <RadioButton
+        android:id="@+id/hellenist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hellenistic (323-146 BC)"/> 
+        
+      
+       <RadioButton
+        android:id="@+id/rom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Roman (146 BC-4th century)" />
+         
 
     <RadioButton
         android:id="@+id/byz"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Byzantine"/>
-	<RadioButton
-        android:id="@+id/rom"
+        android:text="Byzantine (4th century-1453)"/>
+    
+    
+    <RadioButton
+        android:id="@+id/ottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="roman" />
+        android:text="Ottoman (15th century-1821)" />
+    
+    
+    <RadioButton
+        android:id="@+id/mod"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Modern" />
+	
     
 
 
@@ -58,7 +99,6 @@
              android:id="@+id/radio0"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
-             android:checked="true"
              android:text="Museum" />
 
          <RadioButton
@@ -71,7 +111,7 @@
              android:id="@+id/radio2"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
-             android:text="Archeological Site"/>
+             android:text="Palace-Castle"/>
      
      
       <RadioButton
@@ -79,6 +119,22 @@
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
              android:text="Monument" 
+              />
+      
+      
+      <RadioButton
+             android:id="@+id/radio4"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="archeological_site" 
+              />
+      
+      
+      <RadioButton
+             android:id="@+id/radio5"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="Church" 
               />
       
       
@@ -90,4 +146,5 @@
          android:layout_height="wrap_content"
          android:text="Submit" />
 
-</LinearLayout>
+	</LinearLayout>
+</ScrollView>

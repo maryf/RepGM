@@ -1,27 +1,39 @@
 <?php
+//session_start();
 
 include 'config.php';
 
-$username = $_REQUEST['username'];
-$password = $_REQUEST['pass']; 
-$conn = mysql_connect($dbhost, $dbuser, $dbpass) or die("connection error");
-         
-mysql_select_db($dbdb,$conn)or die("database selection error");
-
-
-$query = mysql_query("SELECT username,pass FROM user1 WHERE username='$username' AND pass='$password'");
-$num = mysql_num_rows($query);
-
-if($num == 1){
-
-	while ($list=mysql_fetch_array($query)){
+try {
+    $db = new PDO('mysql:host=localhost;dbname=mobiledb1', $dbuser, $dbpass);
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	$db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 	
-		$output=$list;
-        echo json_encode($output);
-		
+	if ($signin = $db->prepare("SELECT username,pass FROM user1 WHERE username=? AND pass=?")){
+	$username = $_REQUEST['username'];
+	$password = $_REQUEST['pass']; 
+	$signin->execute(array($username, $password));
+	$results = $signin->fetch();
+	$json=json_encode($results);
+	echo $json;
+    $signin = null;
 	}
-	
-    mysql_close();
+	else{
+		echo "wrong";
+		$signin = null;
 	}
+} catch (PDOException $e) {
+    print "Error!: " . $e->getMessage() . "<br/>";
+    die();
+}
+
+$db = null;
+
+
+
+
+
+
+
 	
+
 ?>

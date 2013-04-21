@@ -2,25 +2,33 @@
 
 include 'config.php';
 
-		
-$conn = mysql_connect($dbhost, $dbuser, $dbpass) or die("connection error");
-         
-mysql_select_db($dbdb,$conn)or die("database selection error");
+try {
+    $db = new PDO('mysql:host=localhost;dbname=mobiledb1', $dbuser, $dbpass);
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	$db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+	
+	if ($selpic = $db->prepare("SELECT latitude,longitude,type,image_id FROM pic")){
+	$selpic->execute();
+	$posts = array();
+	while($post=$selpic->fetch()){
+		$posts[] = array('post'=>$post);
+	}
+	header('Content-type: application/json');
+	echo json_encode(array('posts'=>$posts));
+	}
+	else{
+	echo "wrong";
+	$selpic = null;
+	}
+} catch (PDOException $e) {
+    print "Error!: " . $e->getMessage() . "<br/>";
+    die();
+}
 
-$query = "SELECT latitude,longitude,type,image_id FROM pic";
-$result = mysql_query($query);
-  
-$posts = array();
-if(mysql_num_rows($result)) {
-      while($post = mysql_fetch_assoc($result)) {
-      $posts[] = array('post'=>$post);
-    }
-  }
-   
-header('Content-type: application/json');
-echo json_encode(array('posts'=>$posts));
-  
- 
-mysql_close($conn);
+$db = null;
+		
+
+
+
 
 ?>
