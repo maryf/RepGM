@@ -58,7 +58,7 @@ public class Main extends Activity {
 
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				startActivity(new Intent("com.gmapssimple.DIRECTION"));
+				startActivity(new Intent("com.gmapssimple.ABOUTAB"));
 
 			}
 		});
