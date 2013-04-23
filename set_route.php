@@ -11,19 +11,7 @@ try {
 	
 	
 	
-	if ($setroute = $db->prepare("insert into route (path_id,lat,lon)values(?,?,?)")){
-		$pathid = $_POST['path_id'];       
-		$routelat = $_POST['lat'];
-		$routelon = $_POST['lon'];  
-		$setroute->bindValue(1, $pathid, PDO::PARAM_INT);
-		$setroute->bindValue(2, $routelat, PDO::PARAM_INT);
-		$setroute->bindValue(3, $routelon, PDO::PARAM_INT);
-		$setroute->execute();
-	}
-	else{
-	echo "wrong";
-	$setroute = null;
-	}
+
 	
 	
 	
@@ -39,6 +27,21 @@ try {
 	else{
 	echo "wrong";
 	$setroute2 = null;
+	}
+	
+	
+		if ($setroute = $db->prepare("insert into route (path_id,lat,lon)values(?,?,?)")){
+		$pathid = $_POST['path_id'];       
+		$routelat = $_POST['lat'];
+		$routelon = $_POST['lon'];  
+		$setroute->bindValue(1, $pathid, PDO::PARAM_INT);
+		$setroute->bindValue(2, $routelat, PDO::PARAM_INT);
+		$setroute->bindValue(3, $routelon, PDO::PARAM_INT);
+		$setroute->execute();
+	}
+	else{
+	echo "wrong";
+	$setroute = null;
 	}
 	
 	

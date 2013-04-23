@@ -54,9 +54,6 @@ public class Direction extends MapActivity {
 	List<GeoPoint> path_end = new ArrayList<GeoPoint>();
 	GeoPoint p1,p2;
 	//String lat1,lon1,lat2,lon2;
-	HttpPost httppost;
-	HttpResponse response;
-	HttpEntity entity;
 	List<NameValuePair> nameValuePairs;
 	MapView map;
 	MapController mControl;
@@ -72,8 +69,6 @@ public class Direction extends MapActivity {
 	String[] lat,lon;
 	String[] routeLatDb;
 	String[] routeLonDb;
-	HttpPost httppost1;
-	HttpEntity entity1;
 	String s;
 	int latPath;
 	int lonPath;
@@ -194,11 +189,8 @@ public class Direction extends MapActivity {
         //private String Content;  
          
         
-          
-        protected void onPreExecute() {  
-             
-        }  
-  
+        
+        @Override
         protected Void doInBackground(String... urls) {  
             try {  
                HttpPost httppost = new HttpPost(urls[0]);  
@@ -284,6 +276,8 @@ public class Direction extends MapActivity {
             return null;  
         
           }
+        
+        @Override
         protected void onPostExecute(Void unused) {  
         	
 
@@ -297,7 +291,7 @@ public class Direction extends MapActivity {
 			//Path path;
 			
 		    static final int cnt = -1;
-
+		    
 			public CustomPinpoint(Drawable defaultMarker) {
 				super(boundCenter(defaultMarker));
 				mContext = getApplicationContext();
@@ -384,7 +378,7 @@ public class Direction extends MapActivity {
 		 String name = user.get(SessionManager.KEY_NAME);
 		 Log.i("lat111", name);
     	
-		httppost = new HttpPost(urls[0]);
+		HttpPost httppost = new HttpPost(urls[0]);
 		//httppost = new HttpPost("http://192.168.1.60/login/set_rate.php");
 		
 		nameValuePairs = new ArrayList<NameValuePair>();
@@ -392,7 +386,7 @@ public class Direction extends MapActivity {
 
 	
 		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-		entity = httpClient.execute(httppost).getEntity();
+		HttpEntity entity = httpClient.execute(httppost).getEntity();
 		String response = EntityUtils.toString(entity);
 	
 		
@@ -561,27 +555,25 @@ public class Direction extends MapActivity {
 	private class GetURL3 extends AsyncTask<String, Void, Void> {
 		private final HttpClient Client = new DefaultHttpClient(); 
         private String Error = null;  
-        protected void onPreExecute() {  
-        
-        }  
-
+         
+        @Override
 		protected Void doInBackground(String... urls) {
 			try {
 				Log.i("RESPONSE", "ok");
 				//Log.i("stringLa", stringLat);
-				HttpPost httppost2 = new HttpPost(urls[0]);
+				HttpPost httppost = new HttpPost(urls[0]);
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 				
 				nameValuePairs.add(new BasicNameValuePair("latitude",stringLat));
 				
-				httppost2.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
-				HttpResponse response2 = Client.execute(httppost2);
+				HttpResponse response = Client.execute(httppost);
 				Log.i("RESPONSE", "OK");
 				
 				
-				HttpEntity entity2 = response2.getEntity();
-				String inputs = EntityUtils.toString(entity2);
+				HttpEntity entity = response.getEntity();
+				String inputs = EntityUtils.toString(entity);
 				Log.i("RESPONSE3", inputs);
 				session.createImageIdSession(inputs);										
 			
@@ -598,7 +590,9 @@ public class Direction extends MapActivity {
 
           
         return null;  
-		}  
+		} 
+        
+        @Override
 		protected void onPostExecute(Void unused) {    
 			if (Error ==null ) 
             	Toast.makeText(getApplicationContext(), "OK!",Toast.LENGTH_SHORT).show();
@@ -617,29 +611,26 @@ public class GetPathRoute extends AsyncTask<String, Void, Void> {
 		Location routeCoordLoc= new Location("");;
 		float distance=0;
 		int[] nearPathId=null;
-		protected void onPreExecute() { 
-			
-			
-		}
 		
+		@Override
 		public Void doInBackground(String... urls) {  
 		try {
-		httppost1 = new HttpPost(urls[0]);
+		HttpPost httppost = new HttpPost(urls[0]);
 		
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 		
 		nameValuePairs.add(new BasicNameValuePair("lat",Integer.toString(latPath)));
 		
-		httppost1.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
-		response = httpclient1.execute(httppost1);
+		HttpResponse response = httpclient1.execute(httppost);
 		
-		entity1 = response.getEntity();
-		String response = EntityUtils.toString(entity1);
-		Log.i("resp", response);
+		HttpEntity entity = response.getEntity();
+		String respon = EntityUtils.toString(entity);
+		Log.i("resp", respon);
 
 		//tv.setText("ok!");
-		JSONObject json = new JSONObject(response.trim());
+		JSONObject json = new JSONObject(respon.trim());
 		Log.i("ok", "okmetajsonobj");
 
 		JSONArray jArray = json.getJSONArray("posts");
@@ -726,6 +717,8 @@ public class GetPathRoute extends AsyncTask<String, Void, Void> {
 	}
 	return null;  
 	}
+		
+	@Override	
 	public void onPostExecute(Void unused) {  
 		
 		

@@ -362,10 +362,8 @@ public void createPath(String url) {
 	private class CreatePath extends AsyncTask<String, Void, Void> {
 		private final HttpClient Client = new DefaultHttpClient();  
         private String Error = null;  
-        protected void onPreExecute() {  
-        
-        }  
-
+          
+        @Override
 		protected Void doInBackground(String... urls) {
 			try {
 				HashMap<String, String> user = session.getUserDetails();
@@ -426,6 +424,8 @@ public void createPath(String url) {
           
         return null;  
 		}  
+        
+        @Override
 		protected void onPostExecute(Void unused) {    
 			if (Error ==null ) 
             	Toast.makeText(getApplicationContext(), "OK!",Toast.LENGTH_SHORT).show();
@@ -437,10 +437,8 @@ public void createPath(String url) {
 	private class GetURL3 extends AsyncTask<String, Void, Void> {
 		private final HttpClient Client = new DefaultHttpClient();  
         private String Error = null;  
-        protected void onPreExecute() {  
-        
-        }  
-
+         
+        @Override
 		protected Void doInBackground(String... urls) {
 			try {
 				Log.i("RESPONSE", "ok");
@@ -475,6 +473,8 @@ public void createPath(String url) {
           
         return null;  
 		}  
+        
+        @Override
 		protected void onPostExecute(Void unused) {    
 			if (Error ==null ) 
             	Toast.makeText(getApplicationContext(), "OK!",Toast.LENGTH_SHORT).show();
@@ -493,12 +493,11 @@ public void createPath(String url) {
 		private final HttpClient httpclient1 = new DefaultHttpClient(); 
 		private String Error = null; 
 		//String url = "http://192.168.1.60/login/selpic.php";
-		protected void onPreExecute() {  
-		}
 		
+		@Override
 		public int[] doInBackground(String... urls) {  
 		try {
-		HttpPost httppost1 = new HttpPost(urls[0]);
+		//HttpPost httppost1 = new HttpPost(urls[0]);
 		HttpGet httpget = new HttpGet(urls[0]);
 		HttpEntity entity1 = httpclient1.execute(httpget).getEntity();
 		String response = EntityUtils.toString(entity1);
@@ -635,6 +634,8 @@ public void createPath(String url) {
 	}
 	return intLat;  
 	}
+		
+	@Override	
 	public void onPostExecute(int[] result) {  
 		
 		
@@ -652,6 +653,7 @@ public void createPath(String url) {
 	private class SetRouteCoordinates extends AsyncTask<String,Void,Void>{
 		private final HttpClient httpclient = new DefaultHttpClient(); 
 		private String Error = null; 
+		
 		@Override
 		protected Void doInBackground(String... urls) {
 			
@@ -693,7 +695,7 @@ public void createPath(String url) {
 			return null;
 		}
 		
-		
+		@Override
 		protected void onPostExecute(Void unused){
 			if (Error ==null ) 
             	Toast.makeText(getApplicationContext(), "OK!",Toast.LENGTH_SHORT).show();

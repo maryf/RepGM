@@ -34,6 +34,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,11 +44,9 @@ import android.widget.Toast;
 
 public class PinpointView extends Activity {
     Button brating;
-    String rate,rate_db;;
+    ImageButton bFav;
+    String rate,rate_db,username;
     //HttpClient httpclient;
-	HttpPost httppost,httppost1;
-	HttpResponse response,response1;
-	HttpEntity entity,entity1;
 	List<NameValuePair> nameValuePairs,nameValuePairs1;
 	ArrayList<HashMap<String, String>> mylist;
 	String erar,link,bit, typ,imid,frat;
@@ -88,10 +87,32 @@ public class PinpointView extends Activity {
 		});
 		
 		
+		HashMap<String, String> user = session.getUserDetails();
+		 username = user.get(SessionManager.KEY_NAME);
+		Log.i("username1", username);
+		
+		
 		HashMap<String, String> imageId = session.getImageId();
 		 valuefs = imageId.get(SessionManager.KEY_IMAGEID);
 		 //tvsimple.setText(valuefs);
 		Log.i("bitmapMary0", "[" + valuefs+ "]");
+		
+		
+		bFav= (ImageButton) findViewById(R.id.fav); 
+		bFav.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				favoritesAsyncTask(SignIn.add+"set_favorite.php");
+				}
+		});
+		
+		
+		
+		
+		
+		
+		
 
 		
 		maryAsyncTask(SignIn.add+"decode_bitmap.php");
@@ -105,12 +126,22 @@ public class PinpointView extends Activity {
 	 startActivity(backKey);
 	 finish();
 	}*/
+	
+	
 	public void maryAsyncTask(String url) {  
         new MaryAsyncTask().execute(url);  
-    }  
+    } 
+	
 	public void maryAsyncTask1(String url, String rate2) {  
         new MaryAsynctask1().execute(url,rate2);  
+    } 
+	
+	public void favoritesAsyncTask(String url) {  
+        new FavoritesAsyncTask().execute(url);  
     }  
+	
+	
+	
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 	                                ContextMenuInfo menuInfo) {
@@ -191,7 +222,7 @@ public class PinpointView extends Activity {
 	   			HttpConnectionParams.setConnectionTimeout(httpParameters, 5000);
 	   			HttpConnectionParams.setSoTimeout(httpParameters, 10000);
    				Log.i("OK1111", "ok");	   	   
-	   			httppost1 = new HttpPost(urls[0]);
+	   			HttpPost httppost = new HttpPost(urls[0]);
 	   			
 	   			//httppost = new HttpPost("http://192.168.1.60/login/decode_bitmap.php");
 	   			
@@ -200,11 +231,11 @@ public class PinpointView extends Activity {
 	   			
 	   			
 	   			
-	   			httppost1.setEntity(new UrlEncodedFormEntity(nameValuePairs1));
-	   			response1 = Client.execute(httppost1);
-	   			entity1 = response1.getEntity();
+	   			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs1));
+	   			HttpResponse response = Client.execute(httppost);
+	   			HttpEntity entity = response.getEntity();
 	   			
-				String is = EntityUtils.toString(entity1);
+				String is = EntityUtils.toString(entity);
 	   			
 	   			
 				
@@ -297,7 +328,7 @@ public class PinpointView extends Activity {
 		Log.i("OK1", "ok");
     	String rating=urls[1];
     	Log.i("OK1", rating);
-		httppost = new HttpPost(urls[0]);
+		HttpPost httppost = new HttpPost(urls[0]);
 		//httppost = new HttpPost("http://192.168.1.60/login/set_rate.php");
 		Log.i("OK2", "ok");
 		nameValuePairs = new ArrayList<NameValuePair>();
@@ -305,12 +336,12 @@ public class PinpointView extends Activity {
 		nameValuePairs.add(new BasicNameValuePair("rating1", rating));
 		Log.i("OK3", "ok");
 		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-		response = httpClient.execute(httppost); 
+		HttpResponse response = httpClient.execute(httppost); 
 		Log.i("OK4", "ok");
 		if (response.getStatusLine().getStatusCode() == 200) {
 			Log.i("OK5", "ok");
 			
-			entity = response.getEntity();
+			HttpEntity entity = response.getEntity();
 			if (entity != null) {
 				Log.i("OK6", "ok");
 				String is = EntityUtils.toString(entity);
@@ -336,7 +367,62 @@ public class PinpointView extends Activity {
         	Toast.makeText(getApplicationContext(), "SUCCESS!",Toast.LENGTH_SHORT).show();
 
 	}
+}
+	
+	
+	private class FavoritesAsyncTask extends AsyncTask <String,Void,Void>{
+		private final HttpClient httpClient = new DefaultHttpClient();  
+        private String Error = null;  
+        Boolean checkUser=false;
+        String is;
+	
+	@Override
+	protected Void doInBackground(String... urls) {
+		// TODO Auto-generated method stub
+		
+	try{
+		Log.i("OK1", "ok");
+		HttpPost httppost = new HttpPost(urls[0]);
+		//httppost = new HttpPost("http://192.168.1.60/login/set_rate.php");
+		nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("image_id", valuefs));
+		nameValuePairs.add(new BasicNameValuePair("username",username));
+		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		HttpResponse response = httpClient.execute(httppost);
+		if (response.getStatusLine().getStatusCode() == 200) {
+			
+			HttpEntity entity = response.getEntity();
+			if (entity != null) {
+				is = EntityUtils.toString(entity);
+				if (!is.equals("ok")){
+					checkUser=true;
+					
+				}
+				Log.i("response", is);
+				
+				
+			}
+		}
+
+	} catch (Exception e1) {
+		Log.e("log_rating",
+				"Error in http connection " + e1.toString());
+		Error="1";
 	}
+	return null;	
+	
+}
+	
+	@Override
+	protected void onPostExecute(Void unused){
+		if (checkUser){
+			Toast.makeText(getApplicationContext(), is,Toast.LENGTH_SHORT).show();	
+		}
+		else if (Error==null)
+        	Toast.makeText(getApplicationContext(), "Added to your favorite images!",Toast.LENGTH_SHORT).show();
+
+	}
+}
 	
 	
 

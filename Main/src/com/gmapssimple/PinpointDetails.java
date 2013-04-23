@@ -225,7 +225,7 @@ public class PinpointDetails extends Activity {
 	
 	private class AsyncTask7 extends AsyncTask<String,Void,Void>{
 		 private final HttpClient httpclient = new DefaultHttpClient();  
-	    
+		 String Error=null;
 		@Override
 		protected Void doInBackground(String... urls) {
 			//Log.e("OK1", wikiLink);	 
@@ -259,7 +259,7 @@ public class PinpointDetails extends Activity {
 			} catch (Exception e1) {
 				Log.e("log_tag",
 						"Error in http connection " + e1.toString());
-				
+				Error="1";
 			}
 			
 			
@@ -268,11 +268,10 @@ public class PinpointDetails extends Activity {
 			return null;
 		}
 		
-		
+		@Override
 		protected void onPostExecute(Void unused){
-			//Toast.makeText(getApplicationContext(), 
-					//wikiLink+value1,
-					//Toast.LENGTH_SHORT).show();
+			if (Error==null)
+			Toast.makeText(getApplicationContext(), wikiLink+value1,Toast.LENGTH_SHORT).show();
 		}
 		
 	}

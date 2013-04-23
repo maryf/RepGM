@@ -181,6 +181,17 @@
         
        
        <activity
+            android:name=".MyPOI"
+            android:label="@string/title_activity_main" >
+            <intent-filter>
+                <action android:name="com.gmapssimple.MYPOI" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+       
+       <activity
             android:name=".SingleChoiceItemListExampleActivity"
             android:label="@string/title_activity_main" >
             <intent-filter>

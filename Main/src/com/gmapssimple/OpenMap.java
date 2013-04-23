@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.http.HttpEntity;
@@ -13,16 +12,11 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,17 +50,11 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
-import com.google.android.maps.Projection;
 
 public class OpenMap extends MapActivity {
 	MapView mapV;
 	//HttpClient httpclient, httpclient1;
-	HttpPost httppost, httppost1;
-	HttpPost httppost2;
-	HttpResponse response, response1;
-	HttpResponse response2;
-	HttpEntity entity1;
-	HttpEntity entity2;
+	
 	//List<NameValuePair> nameValuePairs;
 	ArrayList<HashMap<String, String>> mylist,mylist1;
 	InputStream is;
@@ -96,11 +84,9 @@ public class OpenMap extends MapActivity {
 	HashMap<String, String> map;
 	HashMap<String, Integer> map1;
 	SessionManager session;
-	private Object GetURL1;
-	private Object GetURL3;
 	String s = null;
 	boolean flag=false;
-	String[] period =new String[] {"byzantine","roman"};
+	String[] period =new String[] {"archaic","classical","hellenistic","roman","byzantine","ottoman","modern"};
 	String[] type_dialog =new String[] {"museum","monument","statue","archeological_site"};
 	int selectedItem=0;
 	int[] pathId;
@@ -132,7 +118,7 @@ public class OpenMap extends MapActivity {
 		duration = Toast.LENGTH_SHORT;
 		
 		mControl = mapV.getController();
-		//new GeopPoint for the city of Patras/Zankynthos
+		//new GeopPoint for the city of Patras/Zakynthos
 		GeoPoint geop1=new GeoPoint(37786029,20898077);
 		
 		mControl.setZoom(14);
@@ -171,6 +157,15 @@ public class OpenMap extends MapActivity {
 			new GetURL1().execute(url);
 		
 		 } 
+	
+	public void getMyPaths(String url) {  
+		
+		new GetMyPaths().execute(url);
+	
+	 } 
+	
+	
+	
 	
 	
     @Override
@@ -227,19 +222,9 @@ public class OpenMap extends MapActivity {
 				}
 			});
 			break;
- 
-       
-        
-        
-        case R.id.sliderIm:
-        	
-        	
-        	Dialog();
-        	break;
             
  
-            
-            
+                
         //log out user    
         case R.id.logout:
         	session.logoutUser();
@@ -278,6 +263,24 @@ public class OpenMap extends MapActivity {
 				}
 			});
 			break;
+			
+			
+       case R.id.sliderIm:
+       	
+       	Dialog();
+       	break;
+       	
+       	
+       	case R.id.myPaths:
+       		getMyPaths(SignIn.add+"get_mypaths.php");
+       		break;
+       	
+       	
+       	case R.id.myPoi:
+       		startActivity(new Intent(getApplicationContext(),MyPOI.class));
+       		break;
+       	
+       	
     	             
  
       //  case R.id.menu_preferences:
@@ -355,19 +358,20 @@ public class OpenMap extends MapActivity {
 		
 			
 			
-			private final HttpClient httpclient1 = new DefaultHttpClient();
-			private String Content;  
+			private final HttpClient httpclient = new DefaultHttpClient(); 
 			private String Error = null; 
 			//String url = "http://192.168.1.60/login/selpic.php";
-			protected void onPreExecute() {  
-			}
 			
+			
+			//synchronizing the method for avoiding concurrent modifications exception caused by the Arraylist
+			@Override
 			public synchronized int[] doInBackground(String... urls) {  
 			try {
-			httppost1 = new HttpPost(urls[0]);
+			HttpPost httppost = new HttpPost(urls[0]);
 			HttpGet httpget = new HttpGet(urls[0]);
-			entity1 = httpclient1.execute(httpget).getEntity();
-			String response = EntityUtils.toString(entity1);
+			HttpEntity entity = httpclient.execute(httpget).getEntity();
+			String response = EntityUtils.toString(entity);
+			Log.i("response1", response);
 			JSONObject json = new JSONObject(response.trim());
 
 			JSONArray jArray = json.getJSONArray("posts");
@@ -494,15 +498,19 @@ public class OpenMap extends MapActivity {
 			} catch (IOException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
+			Error="1";
              
 		}
 		return intLat;  
 		}
+			
+		@Override	
 		public void onPostExecute(int[] result) {  
 			
-			
+			if (Error==null){
 				mapV.invalidate();
             	Toast.makeText(getApplicationContext(), "SUCCESS!",Toast.LENGTH_SHORT).show();
+            	}
             	
 
             	
@@ -578,7 +586,7 @@ public class OpenMap extends MapActivity {
 
 		public CustomPinpoint(Drawable defaultMarker) {
 			super(boundCenter(defaultMarker));
-			mContext = getApplicationContext();
+			mContext = getBaseContext();
 			// TODO Auto-generated constructor stub
 		}
 
@@ -667,32 +675,150 @@ public class OpenMap extends MapActivity {
 	
 	}
 	 
+	 
+	 	//async task for getting the paths of a user
+		public class GetMyPaths extends AsyncTask<String, Void, Void> {  
+			
+			private final HttpClient httpclient = new DefaultHttpClient();
+			String Error=null;
+			
+			
+			@Override
+			public synchronized Void doInBackground(String... urls) {  
+			try {
+			HttpPost httppost = new HttpPost(urls[0]);
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+			HashMap<String, String> user = session.getUserDetails();
+			String username = user.get(SessionManager.KEY_NAME);
+			nameValuePairs.add(new BasicNameValuePair("username",username));
+			
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+			HttpResponse response = httpclient.execute(httppost);
+			Log.i("RESPONSE", "OK");
+			
+			
+			HttpEntity entity = response.getEntity();
+			
+			String respons = EntityUtils.toString(entity);
+			Log.i("respMyPaths", respons);
+			JSONObject json = new JSONObject(respons.trim());
+
+			JSONArray jArray = json.getJSONArray("posts");
+			if (jArray.isNull(0)){
+				Error="2";
+   	        	
+			}
+			else{
+			
+			
+			//getting the starting coordinates of the paths
+			for (int i = 0; i < jArray.length(); i++) {
+
+				
+				JSONObject e1 = jArray.getJSONObject(i);
+				s = e1.getString("post");
+				
+				JSONObject jObject = new JSONObject(s);
+
+				startLatDb = new int[jArray.length()];
+				startLonDb = new int[jArray.length()];
+				pathId = new int[jArray.length()];
+				
+				startLatDb[i] = jObject.getInt("start_lat");
+				pathLat.add(startLatDb[i]);
+				
+				startLonDb[i] = jObject.getInt("start_lon");
+				pathLon.add(startLonDb[i]);
+			
+				
+				Log.i("TABLE STARTLAT", Integer.toString(startLatDb[i]));
+				Log.i("ok", "ok");
+				//nearPathId[++j]=pathId[i];
+				
+				
+				//creates an overlay item and an itemizedoverlay
+				//item in order to create the pinpoint and show it on the map
+				GeoPoint point = new GeoPoint(startLatDb[i], startLonDb[i]);
+				Log.i("indist", Integer.toString(startLatDb[i]));
+				OverlayItem overlayItem = new OverlayItem(point, "path", null);
+				//checking the type of the pinpoint and assigns the corresponding image
+			
+					//creating an instance of ItemizedOverlay class CustomPinpoint
+					CustomPinpoint itemizedOverlay = new CustomPinpoint(draf1,context);
+					itemizedOverlay.insertPinpoint(overlayItem);
+					overlayList.add(itemizedOverlay);
+					mapV.getOverlays().add(itemizedOverlay);
+				
+				
+			}
+			}
+			
+			
+			
+			} catch (ClientProtocolException e) {  
+	         
+	            cancel(true);
+	            Error="1";
+	        } catch (JSONException e1) {
+	        	Log.e("log_tag", "Error parsing data " + e1.toString());
+			 	Error="1";
+			} catch (IOException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+				Error="1";
+	          
+		}
+		return null;  
+		}
+			
+		@Override	
+		public void onPostExecute(Void unused) {  
+			
+			if (Error==null){
+				mapV.invalidate();
+	        	Toast.makeText(getApplicationContext(), "SUCCESS!",Toast.LENGTH_SHORT).show();
+	        	}
+			else if (Error=="2"){
+	        	Toast.makeText(getApplicationContext(), "You haven' t created a path yet",Toast.LENGTH_SHORT).show();
+
+			}
+	        	
+
+	        	
+	        	
+	        	
+	    }
+		
+	}
+	 
+	 
+	 
+	 
 	 //asynchronous task for getting the image_id (from the db) of an image and create a session of it
 	private class GetURL3 extends AsyncTask<String, Void, Void> {
-		private final HttpClient Client = new DefaultHttpClient();  
-		private String Content;  
+		private final HttpClient Client = new DefaultHttpClient();
         private String Error = null;  
-        protected void onPreExecute() {  
+         
         
-        }  
-
+        @Override
 		protected Void doInBackground(String... urls) {
 			try {
 				Log.i("RESPONSE", "ok");
 				//Log.i("stringLa", stringLat);
-				httppost2 = new HttpPost(urls[0]);
+				HttpPost httppost = new HttpPost(urls[0]);
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 				
 				nameValuePairs.add(new BasicNameValuePair("latitude",stringLat));
 				
-				httppost2.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
-				response2 = Client.execute(httppost2);
+				HttpResponse response = Client.execute(httppost);
 				Log.i("RESPONSE", "OK");
 				
 				
-				entity2 = response2.getEntity();
-				String inputs = EntityUtils.toString(entity2);
+				HttpEntity entity = response.getEntity();
+				String inputs = EntityUtils.toString(entity);
 				Log.i("RESPONSE3", inputs);
 				session.createImageIdSession(inputs);										
 			
@@ -709,7 +835,9 @@ public class OpenMap extends MapActivity {
 
           
         return null;  
-		}  
+		} 
+        
+        @Override
 		protected void onPostExecute(Void unused) {    
 			if (Error ==null ) 
             	Toast.makeText(getApplicationContext(), "OK!",Toast.LENGTH_SHORT).show();
@@ -736,28 +864,29 @@ public class OpenMap extends MapActivity {
 	//async task for getting the nearby paths from current position
 	public class GetNearbyPath extends AsyncTask<String, Void, Void> {  
 		
+		private final HttpClient httpclient = new DefaultHttpClient();
+		String Error=null;
 		
-		
-		private final HttpClient httpclient1 = new DefaultHttpClient();
-		
-		Location routeCoordLoc= new Location("");;
+		Location routeCoordLoc= new Location("");
 		float distance=0;
 		int[] nearPathId=null;
+		
+		Boolean exists=false;
 		
 		@Override
 		public synchronized Void doInBackground(String... urls) {  
 		try {
-		httppost1 = new HttpPost(urls[0]);
+		//HttpPost httppost = new HttpPost(urls[0]);
 		HttpGet httpget = new HttpGet(urls[0]);
-		entity1 = httpclient1.execute(httpget).getEntity();
-		String response = EntityUtils.toString(entity1);
+		HttpEntity entity = httpclient.execute(httpget).getEntity();
+		String response = EntityUtils.toString(entity);
 		Log.i("respRoute", response);
 		JSONObject json = new JSONObject(response.trim());
 
 		JSONArray jArray = json.getJSONArray("posts");
 		
 		
-		//getting the route table:path_id,coordinates
+		//getting the path table:path_id,coordinates
 		for (int i = 0; i < jArray.length(); i++) {
 
 			
@@ -792,6 +921,7 @@ public class OpenMap extends MapActivity {
 			int j=-1 ;
 			
 			if (distance<1000){
+				exists=true;
 				Log.i("ok", "ok");
 				//nearPathId[++j]=pathId[i];
 				
@@ -818,21 +948,30 @@ public class OpenMap extends MapActivity {
 		
 		} catch (ClientProtocolException e) {  
          
-            cancel(true);  
+            cancel(true);
+            Error="1";
         } catch (JSONException e1) {
-		Log.e("log_tag", "Error parsing data " + e1.toString());
+        	Log.e("log_tag", "Error parsing data " + e1.toString());
+		 	Error="1";
 		} catch (IOException e2) {
-		// TODO Auto-generated catch block
-		e2.printStackTrace();
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+			Error="1";
           
 	}
 	return null;  
 	}
+	
+	@Override	
 	public void onPostExecute(Void unused) {  
 		
-		
+		if (Error==null){
 			mapV.invalidate();
         	Toast.makeText(getApplicationContext(), "SUCCESS!",Toast.LENGTH_SHORT).show();
+        }
+		if (exists==false)
+        	Toast.makeText(getApplicationContext(), "Sorry, there are no nearby paths, you can create one!!",Toast.LENGTH_SHORT).show();
+
         	
 
         	
@@ -841,6 +980,9 @@ public class OpenMap extends MapActivity {
     }
 	
 }
+	
+	
+	
 	
 	
 

@@ -154,8 +154,8 @@ public class SlideActivity extends Activity {
 	    
 	    
 	    
-//async task class for getting the images (that belong to a specific time era) from the database    
-public class SliderAsTask extends AsyncTask<String, Void, Bitmap[]> {  
+	    //async task class for getting the images (that belong to a specific time era) from the database    
+	    private class SliderAsTask extends AsyncTask<String, Void, Bitmap[]> {  
 		
 			
 			
@@ -172,7 +172,7 @@ public class SliderAsTask extends AsyncTask<String, Void, Bitmap[]> {
 			}
 			
 			@Override
-			public Bitmap[] doInBackground(String... urls) {  
+			protected Bitmap[] doInBackground(String... urls) {  
 			try {
 			HttpPost httppost1 = new HttpPost(urls[0]);
 			List<NameValuePair> nameValuePairs1 = new ArrayList<NameValuePair>();
@@ -265,7 +265,9 @@ public class SliderAsTask extends AsyncTask<String, Void, Bitmap[]> {
 		}
 			return bit_array;
 		}
-		public void onPostExecute(String[] bitArray) { 
+			
+		@Override	
+		protected void onPostExecute(Bitmap[] bitArray) { 
 			
 			//Log.i("array", bitArray.toString());
 			if (Error==null)

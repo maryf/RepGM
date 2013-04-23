@@ -1,8 +1,6 @@
 package com.gmapssimple;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,7 +72,6 @@ public class CreatePin extends MapActivity {
 		mControl.setZoom(11);
 		map.displayZoomControls(true);
 		map.setBuiltInZoomControls(true);
-		TextView tv=(TextView) findViewById(R.id.textView1);
 		dr = getResources().getDrawable(R.drawable.markerblue);
 		
 		Touchy t = new Touchy();
@@ -182,7 +179,7 @@ private class AsyncTask4 extends AsyncTask<String,Void,Void>{
 		return null;
 	}
 	
-	
+	@Override
 	protected void onPostExecute(Void unused){
 		//pinpoint creation
 		OverlayItem overlayItem = new OverlayItem(touchedPoint,
