@@ -56,7 +56,7 @@ try {
 	}
 	else{
 	echo "wrong";
-	$getp2 = null;
+	$setroute3 = null;
 	}
 	
 	

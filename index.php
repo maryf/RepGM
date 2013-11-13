@@ -12,9 +12,17 @@ try {
 	$username = $_REQUEST['username'];
 	$password = $_REQUEST['pass']; 
 	$signin->execute(array($username, $password));
-	$results = $signin->fetch();
-	$json=json_encode($results);
-	echo $json;
+	$log = $signin->fetch();
+	//$json=json_encode($log);
+	//echo $json;
+	
+	
+	if ($log['username']==$username && $log['pass']==$password)
+	echo "success";
+	else 
+	echo "fail";
+	
+	
     $signin = null;
 	}
 	else{

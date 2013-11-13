@@ -10,16 +10,39 @@ try {
 	
 	
 	
-	if ($reg = $db->prepare("INSERT INTO user1 (username,pass) values (?, ?)")){
-	$username = $_POST['username']; 
+	if ($signin = $db->prepare("SELECT username FROM user1 WHERE username=?")){
+	$username = $_POST['username'];
+	$signin->execute(array($username));
+	$log = $signin->fetch();
+	//$json=json_encode($log);
+	//echo $json;
+	
+	
+	if ($log!=null)
+	echo "already_exists";
+	else {
+	if ($reg = $db->prepare("INSERT INTO user1 (username,pass,email) values (?, ?,?)")){
 	$pass = $_POST['pass'];
-	$reg->execute(array($username, $pass));
+	$email = $_POST['email'];
+	$reg->execute(array($username, $pass,$email));
 	echo "ok";
 	}
 	else{
 	echo "wrong";
 	$reg = null;
 	}
+	}
+	
+	
+    $signin = null;
+	}
+	else{
+		echo "wrong";
+		$signin = null;
+	}
+	
+	
+	
 	
 	
 } catch (PDOException $e) {

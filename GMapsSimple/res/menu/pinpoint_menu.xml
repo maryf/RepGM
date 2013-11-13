@@ -1,0 +1,35 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <item android:id="@+id/fav"
+          android:icon="@drawable/favorites"
+          android:showAsAction="always" />
+          
+  
+    
+     <item android:id="@+id/fb"
+           android:text="Post to FB"          
+           android:icon="@drawable/com_facebook_icon"
+           android:showAsAction="always" />
+     
+    
+    <item android:id="@+id/button1"
+          android:text="Get Directions"          
+          android:icon="@drawable/direction"
+          android:showAsAction="always" /> 
+          
+    <item android:id="@+id/rating"
+          android:icon="@drawable/star_holo_light"
+          android:title="Rate"
+          android:showAsAction="always" />
+    
+    <item android:id="@+id/delete"
+          android:title="Delete this image"
+          android:showAsAction="never" />
+          
+	
+	 
+    
+ 
+   
+ 
+</menu>

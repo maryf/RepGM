@@ -1,0 +1,51 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <item android:id="@+id/upload"
+          android:title="Image"
+          android:showAsAction="always"
+          android:actionLayout="@layout/action_button_foo"/>
+          
+  
+    
+     <item android:id="@+id/curPos"
+           android:title="MyPosition"
+           android:showAsAction="always"
+           android:actionLayout="@layout/action_button_foo" />
+     
+    
+    <item android:id="@+id/create_path"
+          android:icon="@drawable/path"
+          android:title="Path"
+          android:showAsAction="always"
+          android:actionLayout="@layout/action_button_foo" /> 
+          
+    <item android:id="@+id/submenu"
+          android:icon="@drawable/search"
+          android:title="Search"
+          android:showAsAction="ifRoom" >
+          <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    				<group android:checkableBehavior="single">
+        				<item android:id="@+id/myPoi"
+              		  		android:title="My POI" />
+        				<item android:id="@+id/myPaths"
+              		  		android:title="My Paths" />
+       	 				<item android:id="@+id/showPaths"
+              		  		android:title="Find nearby Paths" />
+        				<item android:id="@+id/sliderIm"
+            		  		android:title="Slider" />
+            		  	<item android:id="@+id/top10"
+            		  		android:title="Top 10 Images" />
+   					</group>
+  	 
+				</menu>
+          
+	 </item>
+	 
+    
+     <item android:id="@+id/logout"
+          android:title="Log out" 
+          android:showAsAction="ifRoom"/>
+ 
+   
+ 
+</menu>

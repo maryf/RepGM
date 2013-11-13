@@ -1,8 +1,0 @@
-<?php
-
-
-$dbuser = "root";
-$dbpass = "";
-
-
-?>

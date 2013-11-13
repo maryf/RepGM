@@ -11,7 +11,7 @@ try {
 	$db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 	
 	
-	if ($decbit = $db->prepare("SELECT  type ,bitmap , era , wiki_link , final_rating FROM pic WHERE image_id=?")){
+	if ($decbit = $db->prepare("SELECT  username, type ,bitmap , era , wiki_link , final_rating FROM pic WHERE image_id=?")){
 	$b_id = $_POST['image_id']; 
 	$decbit->bindValue(1, $b_id, PDO::PARAM_INT);
 	$decbit->execute();

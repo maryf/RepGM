@@ -1,0 +1,48 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="300dp" >
+
+  
+
+    <TextView
+        android:id="@+id/tv2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/bUpload2"
+        android:layout_marginTop="19dp"
+        android:text=""
+        android:textColor="#00CCCC"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/bUpload2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="55dp"
+        android:text="Open Gallery" />
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="Pick a picture from your gallery or open camera!"
+        android:textColor="#990033"
+        android:textSize="21sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/bUpload2"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/bUpload2"
+        android:layout_marginBottom="16dp"
+        android:text="Take a picture" />
+
+</RelativeLayout>

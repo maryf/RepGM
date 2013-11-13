@@ -19,11 +19,28 @@ try {
 		$posts[] = array('post'=>$post);
 	}
 	header('Content-type: application/json');
-	echo json_encode(array('posts'=>$posts));
+	//echo json_encode(array('posts'=>$posts));
 	}
 	else{
 	echo "wrong";
 	$getr = null;
+	}
+	
+	
+	if ($getr1 = $db->prepare("SELECT * FROM route")){
+	$getr1->execute();
+	
+	
+	$posts1 = array();
+	while($post1=$getr1->fetch()){
+		$posts1[] = array('post1'=>$post1);
+	}
+	header('Content-type: application/json');
+	echo json_encode(array('posts'=>$posts,'posts1'=>$posts1));
+	}
+	else{
+	echo "wrong";
+	$getr1 = null;
 	}
 	
 	
